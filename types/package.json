@@ -1,0 +1,6 @@
+{
+  "name": "react-formie-forms/types",
+  "private": true,
+  "main": "../dist/cjs/types.js",
+  "module": "../dist/esm/types.js"
+}

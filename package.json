@@ -1,0 +1,57 @@
+{
+  "name": "react-formie-forms",
+  "version": "1.0.0-alpha.10",
+  "description": "Renders Craft CMS Formie forms in React apps.",
+  "source": "src/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist",
+    "utils"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuabaker/react-formie-forms.git"
+  },
+  "keywords": [
+    "craft-cms",
+    "craftcms",
+    "formie",
+    "forms",
+    "nextjs",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joshuabaker/react-formie-forms/issues"
+  },
+  "homepage": "https://github.com/joshuabaker/react-formie-forms#readme",
+  "peerDependencies": {
+    "react": "^16.0.0 || ^17.0.0"
+  },
+  "dependencies": {
+    "cross-fetch": "^3.0.6",
+    "formik": "^2.2.6",
+    "lodash": "^4.17.20",
+    "yup": "^0.32.8"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "@rollup/plugin-alias": "^3.1.1",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.1.0",
+    "react": "^16.14.0",
+    "rollup": "^2.35.1"
+  }
+}
