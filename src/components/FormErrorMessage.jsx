@@ -1,20 +1,15 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
+import { BaseWrapper } from "./BaseWrapper";
 
 export const FormErrorMessage = forwardRef((props, ref) => {
-  const { formErrorMessage, options } = useFormieContext();
-
-  if (!formErrorMessage) {
-    return null;
-  }
+  const { options } = useFormieContext();
 
   return (
-    <div
+    <BaseWrapper
       className={options.modifyClassName("form-error-message")}
       ref={ref}
       {...props}
-    >
-      {formErrorMessage}
-    </div>
+    />
   );
 });

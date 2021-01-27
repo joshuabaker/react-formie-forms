@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
 
 export const SubmitButton = forwardRef((props, ref) => {
-  const { isSubmitting, options, page } = useFormieContext();
+  const { isSubmitting, options } = useFormieContext();
 
   return (
     <button
@@ -11,8 +11,6 @@ export const SubmitButton = forwardRef((props, ref) => {
       type={"submit"}
       ref={ref}
       {...props}
-    >
-      {page.settings.submitButtonLabel}
-    </button>
+    />
   );
 });

@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
 
 export const BackButton = forwardRef((props, ref) => {
-  const { isSubmitting, options, page, setPageIndex } = useFormieContext();
+  const { isSubmitting, options, setPageIndex } = useFormieContext();
 
   function handleClick(event) {
     event.preventDefault();
@@ -17,8 +17,6 @@ export const BackButton = forwardRef((props, ref) => {
       ref={ref}
       type={"button"}
       {...props}
-    >
-      {page.settings.backButtonLabel}
-    </button>
+    />
   );
 });

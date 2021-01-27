@@ -1,20 +1,15 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
+import { BaseWrapper } from "./BaseWrapper";
 
 export const FormSuccessMessage = forwardRef((props, ref) => {
-  const { formSuccessMessage, options } = useFormieContext();
-
-  if (!formSuccessMessage) {
-    return null;
-  }
+  const { options } = useFormieContext();
 
   return (
-    <div
+    <BaseWrapper
       className={options.modifyClassName("form-success-message")}
       ref={ref}
       {...props}
-    >
-      {formSuccessMessage}
-    </div>
+    />
   );
 });

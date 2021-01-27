@@ -13,7 +13,7 @@ export const Input = forwardRef((props, ref) => {
       name={handle}
       placeholder={placeholder}
       ref={ref}
-      // required={required}
+      required={required}
       style={{ width: "100%" }}
       type={"text"}
       {...props}
