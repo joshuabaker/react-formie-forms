@@ -36,7 +36,7 @@ export default [
         },
       }),
       babel({
-        babelHelpers: "bundled",
+        babelHelpers: "runtime",
         exclude: "node_modules/**",
       }),
       resolve({
