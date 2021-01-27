@@ -46,30 +46,3 @@ export default [
     ],
   },
 ];
-
-// export default {
-//   input: pkg.source,
-//   output: [
-//     {
-//       file: pkg.main,
-//       format: "cjs",
-//       sourcemap: true,
-//     },
-//     {
-//       file: pkg.module,
-//       format: "es",
-//       sourcemap: true,
-//     },
-//   ],
-//   plugins: [
-//     babel({
-//       babelHelpers: "bundled",
-//       exclude: "node_modules/**",
-//     }),
-//     resolve({
-//       extensions: [".jsx", ".js"],
-//     }),
-//     commonjs(),
-//   ],
-//   external: ["react"],
-// };
