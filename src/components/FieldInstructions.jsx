@@ -1,4 +1,4 @@
 import React from "react";
-import { baseComponent } from "../utils";
+import { BaseComponent } from "./BaseComponent";
 
-export const FieldInstructions = baseComponent("field-instructions");
+export const FieldInstructions = BaseComponent;

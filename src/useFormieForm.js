@@ -84,7 +84,6 @@ const defaultPage = {
 
 const defaultOptions = {
   modifyId: prefix,
-  modifyClassName: prefix,
   styles: {
     columnGap: "1rem",
     rowGap: "1rem",

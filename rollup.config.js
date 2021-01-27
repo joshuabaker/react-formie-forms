@@ -1,6 +1,7 @@
 import alias from "@rollup/plugin-alias";
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
+import del from "rollup-plugin-delete";
 import resolve from "@rollup/plugin-node-resolve";
 
 import pkg from "./package.json";
@@ -28,6 +29,9 @@ export default [
       ...Object.keys(pkg.peerDependencies),
     ],
     plugins: [
+      del({
+        targets: "dist/*",
+      }),
       alias({
         entries: {
           components: "./src/components",

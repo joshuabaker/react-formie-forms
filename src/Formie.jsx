@@ -7,6 +7,7 @@ export const Formie = forwardRef(
   (
     {
       components,
+      enableReinitialize,
       form,
       initialErrors,
       initialPageIndex,
@@ -15,10 +16,14 @@ export const Formie = forwardRef(
       initialTouched,
       initialValues,
       innerRef,
+      isInitialValid,
       onReset,
       onSubmit,
       options,
       validate,
+      validateOnBlur,
+      validateOnChange,
+      validateOnMount,
       validationSchema,
       ...props
     },
@@ -26,6 +31,7 @@ export const Formie = forwardRef(
   ) => {
     const formie = useFormieForm({
       components,
+      enableReinitialize,
       form,
       initialErrors,
       initialPageIndex,
@@ -34,10 +40,14 @@ export const Formie = forwardRef(
       initialTouched,
       initialValues,
       innerRef,
+      isInitialValid,
       onReset,
       onSubmit,
       options,
       validate,
+      validateOnBlur,
+      validateOnChange,
+      validateOnMount,
       validationSchema,
     });
 

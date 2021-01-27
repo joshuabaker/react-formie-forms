@@ -1,7 +1,7 @@
 import React, { forwardRef, Fragment } from "react";
 import { useFormieContext } from "./FormieContext";
 import { isFunction } from "formik";
-import { PageContext } from "./PageContext";
+import { PageProvider } from "./PageContext";
 
 export const FormPages = forwardRef(({ children, ...props }, ref) => {
   const { page, pageIndex } = useFormieContext();
@@ -14,9 +14,7 @@ export const FormPages = forwardRef(({ children, ...props }, ref) => {
 
   return (
     <Fragment ref={ref} key={pageIndex} {...props}>
-      <PageContext.Provider value={{ pageIndex, ...page }}>
-        {currentPage}
-      </PageContext.Provider>
+      <PageProvider value={{ pageIndex, ...page }}>{currentPage}</PageProvider>
     </Fragment>
   );
 });

@@ -1,9 +1,9 @@
 import React, { forwardRef } from "react";
-import { useFormieContext } from "./FormieContext";
 import { BaseComponent } from "./BaseComponent";
+import { useFormieContext } from "./FormieContext";
 
 export const BackButton = forwardRef((props, ref) => {
-  const { isSubmitting, options, setPageIndex } = useFormieContext();
+  const { isSubmitting, setPageIndex } = useFormieContext();
 
   function handleClick(event) {
     event.preventDefault();
@@ -13,11 +13,11 @@ export const BackButton = forwardRef((props, ref) => {
   return (
     <BaseComponent
       as={"button"}
-      ref={ref}
-      className={options.modifyClassName("back-button")}
-      disabled={isSubmitting}
-      onClick={handleClick}
       type={"button"}
+      ref={ref}
+      onClick={handleClick}
+      disabled={isSubmitting}
+      tabIndex={0}
       {...props}
     />
   );

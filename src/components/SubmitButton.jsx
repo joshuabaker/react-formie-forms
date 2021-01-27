@@ -1,15 +1,17 @@
 import React, { forwardRef } from "react";
+import { BaseComponent } from "./BaseComponent";
 import { useFormieContext } from "./FormieContext";
 
 export const SubmitButton = forwardRef((props, ref) => {
-  const { isSubmitting, options } = useFormieContext();
+  const { isSubmitting } = useFormieContext();
 
   return (
-    <button
-      className={options.modifyClassName("submit-button")}
-      disabled={isSubmitting}
+    <BaseComponent
+      as={"button"}
       type={"submit"}
       ref={ref}
+      disabled={isSubmitting}
+      tabIndex={0}
       {...props}
     />
   );

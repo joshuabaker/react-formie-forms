@@ -14,7 +14,9 @@ export const FormieForm = forwardRef((props, ref) => {
   return (
     <components.Form ref={ref} {...props}>
       <components.FormHeader>
-        {form.settings.displayFormTitle && <components.FormTitle />}
+        {form.settings.displayFormTitle && (
+          <components.FormTitle>{form.title}</components.FormTitle>
+        )}
         {form.settings.displayPageTabs && (
           <components.FormPageTabs>
             {(page) => <components.PageTab>{page.name}</components.PageTab>}

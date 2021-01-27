@@ -1,6 +1,6 @@
-import React from "react";
-import { baseComponent } from "../utils";
+import React, { forwardRef } from "react";
+import { BaseComponent } from "./BaseComponent";
 
-export const FieldLabel = baseComponent("field-label", {
-  as: "label",
+export const FieldLabel = forwardRef((props, ref) => {
+  return <BaseComponent as={"label"} ref={ref} {...props} />;
 });

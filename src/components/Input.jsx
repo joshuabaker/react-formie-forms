@@ -1,15 +1,12 @@
 import React, { forwardRef } from "react";
-import { useFormieContext } from "./FormieContext";
-import { useFormieFieldContext } from "./FieldContext";
-import { Field } from "formik";
+import { Field as FormikField } from "formik";
+import { useFieldContext } from "./FieldContext";
 
 export const Input = forwardRef((props, ref) => {
-  const { options } = useFormieContext();
-  const { cssClasses, handle, placeholder, required } = useFormieFieldContext();
+  const { handle, placeholder, required } = useFieldContext();
 
   return (
-    <Field
-      className={`${options.modifyClassName("input")} ${cssClasses}`}
+    <FormikField
       name={handle}
       placeholder={placeholder}
       ref={ref}

@@ -1,4 +1,4 @@
 import React from "react";
-import { baseComponent } from "../utils";
+import { BaseComponent } from "./BaseComponent";
 
-export const FieldErrorMessage = baseComponent("field-error");
+export const FieldErrorMessage = BaseComponent;

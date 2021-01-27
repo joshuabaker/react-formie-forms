@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
-import { useFormieContext } from "./FormieContext";
 import { BaseComponent } from "./BaseComponent";
+import { useFormieContext } from "./FormieContext";
 
 export const FormPageProgress = forwardRef((props, ref) => {
   const { form, pageIndex } = useFormieContext();

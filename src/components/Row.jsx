@@ -14,7 +14,6 @@ export const Row = forwardRef(({ children, ...props }, ref) => {
   return (
     <BaseComponent
       ref={ref}
-      className={options.modifyClassName("row")}
       style={{
         columnGap: options.styles.columnGap,
         display: "grid",

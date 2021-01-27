@@ -12,7 +12,6 @@ export const ButtonGroup = forwardRef((props, ref) => {
 
   return (
     <BaseComponent
-      className={options.modifyClassName("button-group")}
       ref={ref}
       style={{
         display: "grid",

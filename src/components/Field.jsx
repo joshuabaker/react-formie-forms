@@ -1,15 +1,14 @@
 import React, { forwardRef } from "react";
 import { attributesToProps, objectError } from "../utils";
 import { BaseComponent } from "./BaseComponent";
+import { ErrorMessage as FormikErrorMessage } from "formik";
 import { FIELD_POSITION } from "../types";
-import { useField as useFormikField } from "formik";
 import { useFieldContext } from "./FieldContext";
 import { useFormieContext } from "./FormieContext";
 
-export const Field = forwardRef((props, ref) => {
+export const Field = forwardRef(function Field(props, ref) {
   const { components, form, options } = useFormieContext();
   const field = useFieldContext();
-  const [, meta] = useFormikField(props);
 
   if (!field.handle) {
     objectError("field.handle is required", field);
@@ -45,13 +44,12 @@ export const Field = forwardRef((props, ref) => {
 
   const input = React.createElement(components[field.type], {
     id: options.modifyId(field.handle),
-    className: options.modifyClassName("input"),
     ...attributesToProps(field.inputAttributes),
   });
 
   const error = (
     <components.FieldErrorMessage>
-      {meta.touched ? meta.error : null}
+      <FormikErrorMessage name={field.handle} />
     </components.FieldErrorMessage>
   );
 
@@ -71,39 +69,44 @@ export const Field = forwardRef((props, ref) => {
   );
 
   const fieldProps = {
-    className: `${options.modifyClassName("field")} ${field.cssClasses}`,
     ...attributesToProps(field.containerAttributes),
     ref,
     ...props,
   };
 
-  return labelPosition === FIELD_POSITION.LEFT_INPUT ? (
-    <BaseComponent
-      style={{
-        display: "grid",
-        columnGap: options.columnGap,
-        rowGap: options.rowGap,
-        gridTemplateColumns: "auto 1fr",
-      }}
-      {...fieldProps}
-    >
-      {label}
-      {generatedChildren}
-    </BaseComponent>
-  ) : labelPosition === FIELD_POSITION.RIGHT_INPUT ? (
-    <BaseComponent
-      style={{
-        display: "grid",
-        columnGap: options.columnGap,
-        rowGap: options.rowGap,
-        gridTemplateColumns: "1fr auto",
-      }}
-      {...fieldProps}
-    >
-      {generatedChildren}
-      {label}
-    </BaseComponent>
-  ) : (
-    <BaseComponent {...fieldProps}>{generatedChildren}</BaseComponent>
-  );
+  if (labelPosition === FIELD_POSITION.LEFT_INPUT) {
+    return (
+      <BaseComponent
+        style={{
+          display: "grid",
+          columnGap: options.columnGap,
+          rowGap: options.rowGap,
+          gridTemplateColumns: "auto 1fr",
+        }}
+        {...fieldProps}
+      >
+        {label}
+        {generatedChildren}
+      </BaseComponent>
+    );
+  }
+
+  if (labelPosition === FIELD_POSITION.RIGHT_INPUT) {
+    return (
+      <BaseComponent
+        style={{
+          display: "grid",
+          columnGap: options.columnGap,
+          rowGap: options.rowGap,
+          gridTemplateColumns: "1fr auto",
+        }}
+        {...fieldProps}
+      >
+        {generatedChildren}
+        {label}
+      </BaseComponent>
+    );
+  }
+
+  return <BaseComponent {...fieldProps}>{generatedChildren}</BaseComponent>;
 });

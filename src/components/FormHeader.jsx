@@ -1,4 +1,4 @@
 import React from "react";
-import { baseComponent } from "../utils";
+import { BaseComponent } from "./BaseComponent";
 
-export const FormHeader = baseComponent("form-header");
+export const FormHeader = BaseComponent;

@@ -1,12 +1,15 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
+import { BaseComponent } from "./BaseComponent";
 
 export const Page = forwardRef(({ children, ...props }, ref) => {
-  const { isSubmitting, options } = useFormieContext();
+  const { isSubmitting } = useFormieContext();
 
   return (
-    <div className={options.modifyClassName("page")} ref={ref} {...props}>
-      <fieldset disabled={isSubmitting}>{children}</fieldset>
-    </div>
+    <BaseComponent ref={ref} {...props}>
+      <BaseComponent as={"fieldset"} disabled={isSubmitting}>
+        {children}
+      </BaseComponent>
+    </BaseComponent>
   );
 });

@@ -5,14 +5,10 @@ import { RowProvider } from "./RowContext";
 import { useFormieContext } from "./FormieContext";
 
 export const PageRows = forwardRef(({ children, ...props }, ref) => {
-  const { page, options } = useFormieContext();
+  const { page } = useFormieContext();
 
   return (
-    <BaseComponent
-      className={options.modifyClassName("page-rows")}
-      ref={ref}
-      {...props}
-    >
+    <BaseComponent ref={ref} {...props}>
       {page.rows.map((row, rowIndex) => (
         <Fragment key={rowIndex}>
           <RowProvider value={{ rowIndex, ...row }}>
