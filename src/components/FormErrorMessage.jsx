@@ -1,15 +1,4 @@
-import React, { forwardRef } from "react";
-import { useFormieContext } from "./FormieContext";
-import { BaseWrapper } from "./BaseWrapper";
+import React from "react";
+import { baseComponent } from "../utils";
 
-export const FormErrorMessage = forwardRef((props, ref) => {
-  const { options } = useFormieContext();
-
-  return (
-    <BaseWrapper
-      className={options.modifyClassName("form-error-message")}
-      ref={ref}
-      {...props}
-    />
-  );
-});
+export const FormErrorMessage = baseComponent("form-error-message");

@@ -3,15 +3,15 @@ import pick from "lodash/pick";
 import { getFieldHandles, getPageFields } from "../utils/helpers";
 import { useFormieContext } from "./FormieContext";
 
-export const FormiePageContext = createContext(null);
+export const PageContext = createContext(null);
 
-export const FormiePageProvider = FormiePageContext.Provider;
+export const PageProvider = PageContext.Provider;
 
-export const FormiePageConsumer = FormiePageContext.Consumer;
+export const PageConsumer = PageContext.Consumer;
 
-export function useFormiePageContext() {
+export function usePageContext() {
   const { errors, values } = useFormieContext();
-  const page = useContext(FormiePageContext);
+  const page = useContext(PageContext);
 
   const pageFieldHandles = getFieldHandles(getPageFields(page));
 

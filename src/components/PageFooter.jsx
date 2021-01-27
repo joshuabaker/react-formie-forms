@@ -1,12 +1,12 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
-import { BaseWrapper } from "./BaseWrapper";
+import { BaseComponent } from "./BaseComponent";
 
 export const PageFooter = forwardRef((props, ref) => {
   const { options } = useFormieContext();
 
   return (
-    <BaseWrapper
+    <BaseComponent
       className={options.modifyClassName("page-footer")}
       ref={ref}
       {...props}

@@ -1,17 +1,15 @@
 import React, { forwardRef } from "react";
-import { BaseWrapper } from "./BaseWrapper";
-import {
-  attributesToProps,
-  objectError,
-  requiredPropError,
-} from "../utils/helpers";
+import { attributesToProps, objectError } from "../utils";
+import { BaseComponent } from "./BaseComponent";
 import { FIELD_POSITION } from "../types";
+import { useField as useFormikField } from "formik";
+import { useFieldContext } from "./FieldContext";
 import { useFormieContext } from "./FormieContext";
-import { useFormieFieldContext } from "./FormieFieldContext";
 
 export const Field = forwardRef((props, ref) => {
   const { components, form, options } = useFormieContext();
-  const field = useFormieFieldContext();
+  const field = useFieldContext();
+  const [, meta] = useFormikField(props);
 
   if (!field.handle) {
     objectError("field.handle is required", field);
@@ -33,15 +31,31 @@ export const Field = forwardRef((props, ref) => {
     ? field.instructionsPosition
     : form.settings.defaultInstructionsPosition;
 
-  const label = <components.FieldLabel />;
-  const instructions = <components.FieldInstructions />;
+  const label = (
+    <components.FieldLabel hrefFor={options.modifyId(field.handle)}>
+      {field.name}
+    </components.FieldLabel>
+  );
+
+  const instructions = (
+    <components.FieldInstructions>
+      {field.instructions}
+    </components.FieldInstructions>
+  );
+
   const input = React.createElement(components[field.type], {
     id: options.modifyId(field.handle),
     className: options.modifyClassName("input"),
     ...attributesToProps(field.inputAttributes),
   });
 
-  const children = (
+  const error = (
+    <components.FieldErrorMessage>
+      {meta.touched ? meta.error : null}
+    </components.FieldErrorMessage>
+  );
+
+  const generatedChildren = (
     <>
       {labelPosition === FIELD_POSITION.ABOVE_INPUT && label}
       {(instructionsPosition === FIELD_POSITION.ABOVE_INPUT ||
@@ -52,7 +66,7 @@ export const Field = forwardRef((props, ref) => {
       {(instructionsPosition === FIELD_POSITION.BELOW_INPUT ||
         instructionsPosition === FIELD_POSITION.RIGHT_INPUT) &&
         instructions}
-      <components.FieldErrorMessage />
+      {error}
     </>
   );
 
@@ -64,7 +78,7 @@ export const Field = forwardRef((props, ref) => {
   };
 
   return labelPosition === FIELD_POSITION.LEFT_INPUT ? (
-    <BaseWrapper
+    <BaseComponent
       style={{
         display: "grid",
         columnGap: options.columnGap,
@@ -74,10 +88,10 @@ export const Field = forwardRef((props, ref) => {
       {...fieldProps}
     >
       {label}
-      {children}
-    </BaseWrapper>
+      {generatedChildren}
+    </BaseComponent>
   ) : labelPosition === FIELD_POSITION.RIGHT_INPUT ? (
-    <BaseWrapper
+    <BaseComponent
       style={{
         display: "grid",
         columnGap: options.columnGap,
@@ -86,10 +100,10 @@ export const Field = forwardRef((props, ref) => {
       }}
       {...fieldProps}
     >
-      {children}
+      {generatedChildren}
       {label}
-    </BaseWrapper>
+    </BaseComponent>
   ) : (
-    <BaseWrapper {...fieldProps}>{children}</BaseWrapper>
+    <BaseComponent {...fieldProps}>{generatedChildren}</BaseComponent>
   );
 });

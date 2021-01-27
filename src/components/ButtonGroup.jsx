@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { BaseWrapper } from "./BaseWrapper";
+import { BaseComponent } from "./BaseComponent";
 import { useFormieContext } from "./FormieContext";
 import { BUTTON_POSITION } from "../types";
 
@@ -11,7 +11,7 @@ export const ButtonGroup = forwardRef((props, ref) => {
   );
 
   return (
-    <BaseWrapper
+    <BaseComponent
       className={options.modifyClassName("button-group")}
       ref={ref}
       style={{

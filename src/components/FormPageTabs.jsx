@@ -1,24 +1,24 @@
 import React, { forwardRef } from "react";
-import { FormiePageContext } from "./FormiePageContext";
+import { PageContext } from "./PageContext";
 import { useFormieContext } from "./FormieContext";
+import { isFunction } from "formik";
+import { BaseComponent } from "./BaseComponent";
 
-export const FormPageTabs = forwardRef((props, ref) => {
-  const { components, form, options } = useFormieContext();
+export const FormPageTabs = forwardRef(({ children, ...props }, ref) => {
+  const { form, options } = useFormieContext();
 
   return (
-    <ul
-      className={options.modifyClassName("form-page-tabs")}
+    <BaseComponent
+      as={"ul"}
       ref={ref}
+      className={options.modifyClassName("form-page-tabs")}
       {...props}
     >
-      {form.pages.map((page, index) => (
-        <FormiePageContext.Provider
-          value={{ pageIndex: index, ...page }}
-          key={index}
-        >
-          <components.PageTab />
-        </FormiePageContext.Provider>
+      {form.pages.map((page, pageIndex) => (
+        <PageContext.Provider value={{ pageIndex, ...page }} key={index}>
+          {isFunction(children) ? children(page, pageIndex) : children}
+        </PageContext.Provider>
       ))}
-    </ul>
+    </BaseComponent>
   );
 });

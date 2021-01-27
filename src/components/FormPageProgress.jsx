@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
+import { BaseComponent } from "./BaseComponent";
 
 export const FormPageProgress = forwardRef((props, ref) => {
   const { form, pageIndex } = useFormieContext();
@@ -7,8 +8,12 @@ export const FormPageProgress = forwardRef((props, ref) => {
   const pageCount = form.pages.length;
 
   return (
-    <progress max={pageCount} value={pageNumber} ref={ref} {...props}>
-      {pageNumber} of {pageCount}
-    </progress>
+    <BaseComponent
+      as={"progress"}
+      ref={ref}
+      max={pageCount}
+      value={pageNumber}
+      {...props}
+    />
   );
 });

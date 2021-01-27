@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
-import { useFormieFieldContext } from "./FormieFieldContext";
+import { useFormieFieldContext } from "./FieldContext";
 import { Field } from "formik";
 
 export const Input = forwardRef((props, ref) => {

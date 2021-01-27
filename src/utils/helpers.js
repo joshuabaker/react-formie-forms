@@ -1,10 +1,26 @@
+import React, { forwardRef } from "react";
 import flatMap from "lodash/flatMap";
 import keyBy from "lodash/keyBy";
 import map from "lodash/map";
 import mapValues from "lodash/mapValues";
 import transform from "lodash/transform";
+import { BaseComponent } from "../components/BaseComponent";
+import { useFormieContext } from "../components";
 
-export function basePrefix(value) {
+export const baseComponent = (className, defaultProps) =>
+  forwardRef((props, ref) => {
+    const { options } = useFormieContext();
+    return (
+      <BaseComponent
+        className={options.modifyClassName(className)}
+        ref={ref}
+        {...defaultProps}
+        {...props}
+      />
+    );
+  });
+
+export function prefix(value) {
   return `fui-${value}`;
 }
 

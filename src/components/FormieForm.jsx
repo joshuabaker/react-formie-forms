@@ -1,6 +1,4 @@
 import React, { forwardRef } from "react";
-import { FormiePageContext } from "./FormiePageContext";
-import { FormieFieldContext } from "./FormieFieldContext";
 import { useFormieContext } from "./FormieContext";
 import { FORM_POSITION } from "../types";
 
@@ -10,14 +8,23 @@ export const FormieForm = forwardRef((props, ref) => {
     form,
     formErrorMessage,
     formSuccessMessage,
+    pageIndex,
   } = useFormieContext();
 
   return (
     <components.Form ref={ref} {...props}>
       <components.FormHeader>
         {form.settings.displayFormTitle && <components.FormTitle />}
-        {form.settings.displayPageTabs && <components.FormPageTabs />}
-        {form.settings.displayPageProgress && <components.FormPageProgress />}
+        {form.settings.displayPageTabs && (
+          <components.FormPageTabs>
+            {(page) => <components.PageTab>{page.name}</components.PageTab>}
+          </components.FormPageTabs>
+        )}
+        {form.settings.displayPageProgress && (
+          <components.FormPageProgress>
+            {pageIndex + 1} of {form.pages.length}
+          </components.FormPageProgress>
+        )}
         {form.settings.errorMessagePosition === FORM_POSITION.ABOVE_FORM && (
           <components.FormErrorMessage>
             {formErrorMessage}
@@ -31,43 +38,32 @@ export const FormieForm = forwardRef((props, ref) => {
         )}
       </components.FormHeader>
       <components.FormPages>
-        {form.pages.map((page, pageIndex) => (
-          <FormiePageContext.Provider
-            value={{ pageIndex, ...page }}
-            key={index}
-          >
-            <components.Page>
-              <components.PageHeader>
-                {form.settings.displayCurrentPageTitle && (
-                  <components.PageTitle>{page.name}</components.PageTitle>
+        {(page, pageIndex) => (
+          <components.Page>
+            <components.PageHeader>
+              {form.settings.displayCurrentPageTitle && (
+                <components.PageTitle>{page.name}</components.PageTitle>
+              )}
+            </components.PageHeader>
+            <components.PageRows>
+              {() => (
+                <components.Row>{() => <components.Field />}</components.Row>
+              )}
+            </components.PageRows>
+            <components.PageFooter>
+              <components.ButtonGroup>
+                {pageIndex > 0 && page.settings.showBackButton && (
+                  <components.BackButton>
+                    {page.settings.backButtonLabel}
+                  </components.BackButton>
                 )}
-              </components.PageHeader>
-              <components.PageRows>
-                {page.rows.map((row, index) => (
-                  <components.Row key={index}>
-                    {row.fields.map((field, index) => (
-                      <FormieFieldContext.Provider value={field} key={index}>
-                        <components.Field />
-                      </FormieFieldContext.Provider>
-                    ))}
-                  </components.Row>
-                ))}
-              </components.PageRows>
-              <components.PageFooter>
-                <components.ButtonGroup>
-                  {pageIndex > 0 && page.settings.showBackButton && (
-                    <components.BackButton>
-                      {page.settings.backButtonLabel}
-                    </components.BackButton>
-                  )}
-                  <components.SubmitButton>
-                    {page.settings.submitButtonLabel}
-                  </components.SubmitButton>
-                </components.ButtonGroup>
-              </components.PageFooter>
-            </components.Page>
-          </FormiePageContext.Provider>
-        ))}
+                <components.SubmitButton>
+                  {page.settings.submitButtonLabel}
+                </components.SubmitButton>
+              </components.ButtonGroup>
+            </components.PageFooter>
+          </components.Page>
+        )}
       </components.FormPages>
       <components.FormFooter>
         {form.settings.submitActionMessagePosition ===

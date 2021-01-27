@@ -1,19 +1,6 @@
-import React, { forwardRef } from "react";
-import { useFormieContext } from "./FormieContext";
-import { useFormieFieldContext } from "./FormieFieldContext";
+import React from "react";
+import { baseComponent } from "../utils";
 
-export const FieldLabel = forwardRef((props, ref) => {
-  const { options } = useFormieContext();
-  const { name, handle } = useFormieFieldContext();
-
-  return (
-    <label
-      className={options.modifyClassName("field-label")}
-      htmlFor={options.modifyId(handle)}
-      ref={ref}
-      {...props}
-    >
-      {name}
-    </label>
-  );
+export const FieldLabel = baseComponent("field-label", {
+  as: "label",
 });

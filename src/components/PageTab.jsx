@@ -1,15 +1,16 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
-import { useFormiePageContext } from "./FormiePageContext";
+import { usePageContext } from "./PageContext";
+import { BaseComponent } from "./BaseComponent";
 
-export const PageTab = forwardRef((props, ref) => {
+export const PageTab = forwardRef(({ children, ...props }, ref) => {
   const {
     options,
     pageIndex: currentPageIndex,
     setPageIndex,
   } = useFormieContext();
 
-  const { pageIndex, errors, name } = useFormiePageContext();
+  const { pageIndex, errors } = usePageContext();
 
   let className = options.modifyClassName("page-tab");
 
@@ -27,10 +28,10 @@ export const PageTab = forwardRef((props, ref) => {
   }
 
   return (
-    <li className={className} ref={ref} {...props}>
-      <a href={"#"} onClick={handleClick}>
-        {name}
-      </a>
-    </li>
+    <BaseComponent as={"li"} className={className} ref={ref} {...props}>
+      <BaseComponent as={"a"} href={"#"} onClick={handleClick}>
+        {children}
+      </BaseComponent>
+    </BaseComponent>
   );
 });

@@ -1,15 +1,4 @@
-import React, { forwardRef } from "react";
-import { BaseWrapper } from "./BaseWrapper";
-import { useFormieContext } from "./FormieContext";
+import React from "react";
+import { baseComponent } from "../utils";
 
-export const FormFooter = forwardRef((props, ref) => {
-  const { options } = useFormieContext();
-
-  return (
-    <BaseWrapper
-      className={options.modifyClassName("form-footer")}
-      ref={ref}
-      {...props}
-    />
-  );
-});
+export const FormFooter = baseComponent("form-footer");

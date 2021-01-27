@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  basePrefix,
   getFormDefaultValues,
   getFormValidationSchema,
   getPageFieldHandles,
+  prefix,
   requiredPropError,
 } from "./utils";
 import {
@@ -83,8 +83,8 @@ const defaultPage = {
 };
 
 const defaultOptions = {
-  modifyId: basePrefix,
-  modifyClassName: basePrefix,
+  modifyId: prefix,
+  modifyClassName: prefix,
   styles: {
     columnGap: "1rem",
     rowGap: "1rem",
