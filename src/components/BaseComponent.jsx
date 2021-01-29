@@ -1,8 +1,9 @@
-import React, { forwardRef } from "react";
-import { isEmptyChildren } from "formik";
+import React, { Children, forwardRef } from "react";
 
 export const BaseComponent = forwardRef(({ as = "div", ...props }, ref) => {
-  if (isEmptyChildren(props.children)) {
+  const { children } = props;
+
+  if (Children.count(children) === 0 || !children) {
     return null;
   }
 

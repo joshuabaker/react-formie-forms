@@ -30,8 +30,10 @@ export const Field = forwardRef(function Field(props, ref) {
     ? field.instructionsPosition
     : form.settings.defaultInstructionsPosition;
 
+  const errorPosition = form.settings.unstable_defaultFieldErrorPosition;
+
   const label = (
-    <components.FieldLabel hrefFor={options.modifyId(field.handle)}>
+    <components.FieldLabel htmlFor={field.id}>
       {field.name}
     </components.FieldLabel>
   );
@@ -55,6 +57,7 @@ export const Field = forwardRef(function Field(props, ref) {
 
   const generatedChildren = (
     <>
+      {errorPosition === FIELD_POSITION.ABOVE_INPUT && error}
       {labelPosition === FIELD_POSITION.ABOVE_INPUT && label}
       {(instructionsPosition === FIELD_POSITION.ABOVE_INPUT ||
         instructionsPosition === FIELD_POSITION.LEFT_INPUT) &&
@@ -64,7 +67,7 @@ export const Field = forwardRef(function Field(props, ref) {
       {(instructionsPosition === FIELD_POSITION.BELOW_INPUT ||
         instructionsPosition === FIELD_POSITION.RIGHT_INPUT) &&
         instructions}
-      {error}
+      {errorPosition === FIELD_POSITION.BELOW_INPUT && error}
     </>
   );
 

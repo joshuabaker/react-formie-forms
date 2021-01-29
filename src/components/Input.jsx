@@ -1,18 +1,18 @@
-import React, { forwardRef } from "react";
-import { Field as FormikField } from "formik";
-import { useFieldContext } from "./FieldContext";
+import React, { forwardRef } from 'react';
+import { Field as FormikField } from 'formik';
+import { useFieldContext } from './FieldContext';
 
 export const Input = forwardRef((props, ref) => {
   const { handle, placeholder, required } = useFieldContext();
 
   return (
     <FormikField
+      ref={ref}
+      type={'text'}
       name={handle}
       placeholder={placeholder}
-      ref={ref}
       required={required}
-      style={{ width: "100%" }}
-      type={"text"}
+      style={{ width: '100%' }}
       {...props}
     />
   );

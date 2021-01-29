@@ -10,7 +10,7 @@ export const FormPageTabs = forwardRef(({ children, ...props }, ref) => {
   return (
     <BaseComponent as={"ul"} ref={ref} {...props}>
       {form.pages.map((page, pageIndex) => (
-        <PageProvider value={{ pageIndex, ...page }} key={index}>
+        <PageProvider value={{ pageIndex, ...page }}>
           {isFunction(children) ? children(page, pageIndex) : children}
         </PageProvider>
       ))}

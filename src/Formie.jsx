@@ -6,6 +6,7 @@ import { useFormieForm } from "./useFormieForm";
 export const Formie = forwardRef(
   (
     {
+      id,
       components,
       enableReinitialize,
       form,
@@ -52,7 +53,7 @@ export const Formie = forwardRef(
     });
 
     return (
-      <FormieProvider value={formie}>
+      <FormieProvider value={formie} key={formie.form.handle}>
         <FormieForm ref={ref} {...props} />
       </FormieProvider>
     );

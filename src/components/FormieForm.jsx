@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { useFormieContext } from "./FormieContext";
 import { FORM_POSITION } from "../types";
+import { PageProvider } from "./PageContext";
 
 export const FormieForm = forwardRef((props, ref) => {
   const {
@@ -8,11 +9,12 @@ export const FormieForm = forwardRef((props, ref) => {
     form,
     formErrorMessage,
     formSuccessMessage,
+    page,
     pageIndex,
   } = useFormieContext();
 
   return (
-    <components.Form ref={ref} {...props}>
+    <components.Form ref={ref} key={form.handle} {...props}>
       <components.FormHeader>
         {form.settings.displayFormTitle && (
           <components.FormTitle>{form.title}</components.FormTitle>
@@ -40,7 +42,7 @@ export const FormieForm = forwardRef((props, ref) => {
         )}
       </components.FormHeader>
       <components.FormPages>
-        {(page, pageIndex) => (
+        <PageProvider value={page}>
           <components.Page>
             <components.PageHeader>
               {form.settings.displayCurrentPageTitle && (
@@ -65,7 +67,7 @@ export const FormieForm = forwardRef((props, ref) => {
               </components.ButtonGroup>
             </components.PageFooter>
           </components.Page>
-        )}
+        </PageProvider>
       </components.FormPages>
       <components.FormFooter>
         {form.settings.submitActionMessagePosition ===

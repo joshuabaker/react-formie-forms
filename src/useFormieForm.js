@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  defaultModifyId,
   getFormDefaultValues,
   getFormValidationSchema,
   getPageFieldHandles,
-  prefix,
   requiredPropError,
 } from "./utils";
 import {
@@ -35,9 +35,14 @@ import {
 import merge from "lodash/merge";
 import { BUTTON_POSITION, FIELD_POSITION, FIELD_TYPE } from "./types";
 import { useFormik } from "formik";
+import { FileUpload } from "./components/FileUpload";
+import { MultiLineText } from "./components/MultiLineText";
 
 export const defaultComponents = {
-  [FIELD_TYPE.EMAIL]: (props) => <Input type="email" {...props} />,
+  [FIELD_TYPE.EMAIL]: (props) => <Input type={"email"} {...props} />,
+  [FIELD_TYPE.FILE_UPLOAD]: FileUpload,
+  [FIELD_TYPE.HIDDEN]: (props) => <Input type={"hidden"} {...props} />,
+  [FIELD_TYPE.MULTI_LINE_TEXT]: MultiLineText,
   [FIELD_TYPE.SINGLE_LINE_TEXT]: Input,
   BackButton: BackButton,
   ButtonGroup: ButtonGroup,
@@ -70,6 +75,7 @@ const defaultForm = {
     defaultLabelPosition: FIELD_POSITION.ABOVE_INPUT,
     errorMessagePosition: FIELD_POSITION.ABOVE_FORM,
     submitActionMessagePosition: FIELD_POSITION.ABOVE_FORM,
+    unstable_defaultFieldErrorPosition: FIELD_POSITION.BELOW_INPUT,
   },
 };
 
@@ -83,7 +89,7 @@ const defaultPage = {
 };
 
 const defaultOptions = {
-  modifyId: prefix,
+  modifyId: defaultModifyId,
   styles: {
     columnGap: "1rem",
     rowGap: "1rem",
@@ -113,15 +119,15 @@ export function useFormieForm({
   const [submissionId, setSubmissionId] = useState(initialSubmissionId);
 
   const form = useMemo(() => {
-    return merge(defaultForm, _form);
+    return merge({}, defaultForm, _form);
   }, [_form]);
 
   const page = useMemo(() => {
-    return merge(defaultPage, form.pages[pageIndex]);
+    return merge({}, defaultPage, form.pages[pageIndex]);
   }, [form, pageIndex]);
 
   const options = useMemo(() => {
-    return merge(defaultOptions, _options);
+    return merge({}, defaultOptions, _options);
   }, [_options]);
 
   const validationSchema = useMemo(() => {

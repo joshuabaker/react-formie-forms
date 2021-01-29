@@ -6,7 +6,7 @@ import { useFormieContext } from "./FormieContext";
 import { useRowContext } from "./RowContext";
 
 export const Row = forwardRef(({ children, ...props }, ref) => {
-  const { options } = useFormieContext();
+  const { form, options } = useFormieContext();
   const row = useRowContext();
 
   const columnCount = Children.count(props.children);
@@ -23,7 +23,14 @@ export const Row = forwardRef(({ children, ...props }, ref) => {
       {...props}
     >
       {row.fields.map((field, fieldIndex) => (
-        <FieldProvider value={{ fieldIndex, ...field }} key={fieldIndex}>
+        <FieldProvider
+          value={{
+            fieldIndex,
+            id: options.modifyId(field.handle, form.handle),
+            ...field,
+          }}
+          key={fieldIndex}
+        >
           {isFunction(children) ? children(field, fieldIndex) : children}
         </FieldProvider>
       ))}

@@ -5,8 +5,8 @@ import map from "lodash/map";
 import mapValues from "lodash/mapValues";
 import transform from "lodash/transform";
 
-export function prefix(value) {
-  return `fui-${value}`;
+export function defaultModifyId(id, namespace = "form") {
+  return `fui-${namespace}-${id}`;
 }
 
 export function attributesToProps(attributes) {
