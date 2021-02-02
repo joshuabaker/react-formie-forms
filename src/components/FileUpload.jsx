@@ -3,11 +3,13 @@ import { BaseComponent } from "./BaseComponent";
 import { isFunction, useField as useFormikField } from "formik";
 import { useDropzone } from "react-dropzone";
 import { useFieldContext } from "./FieldContext";
+import { useFormieContext } from "./FormieContext";
 
 export const FileUpload = forwardRef(
   ({ children, dropzoneProps, ...props }, ref) => {
-    const { handle, id, required } = useFieldContext();
-    const [field, , helpers] = useFormikField(handle);
+    const { form, options } = useFormieContext();
+    const field = useFieldContext();
+    const [formikField, , helpers] = useFormikField(field.handle);
 
     const dropzone = useDropzone({
       onDrop: helpers.setValue,
@@ -17,10 +19,10 @@ export const FileUpload = forwardRef(
 
     const { getRootProps, getInputProps } = dropzone;
 
-    const files = Array.isArray(field.value)
-      ? field.value
-      : field.value && field.value !== ""
-      ? [field.value]
+    const files = Array.isArray(formikField.value)
+      ? formikField.value
+      : formikField.value && formikField.value !== ""
+      ? [formikField.value]
       : [];
 
     return (
@@ -30,7 +32,12 @@ export const FileUpload = forwardRef(
         {...getRootProps()}
         {...props}
       >
-        <input name={handle} id={id} required={required} {...getInputProps()} />
+        <input
+          name={field.handle}
+          id={options.modifyId(field.handle, form.handle)}
+          required={field.required}
+          {...getInputProps()}
+        />
         {children ? (
           isFunction(children) ? (
             children({ dropzone, files })

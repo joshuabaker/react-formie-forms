@@ -1,28 +1,48 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, Fragment } from "react";
 import { BaseComponent } from "./BaseComponent";
+import { FIELD_TYPE } from "../types";
 import { FieldProvider } from "./FieldContext";
 import { isFunction } from "formik";
 import { useFormieContext } from "./FormieContext";
 import { useRowContext } from "./RowContext";
+import { objectError, requiredPropErrorMessage } from "../utils/helpers";
 
 export const Row = forwardRef(({ children, ...props }, ref) => {
-  const { form, options } = useFormieContext();
   const row = useRowContext();
+  const { fields } = row;
+
+  if (fields.length === 0) objectError(requiredPropErrorMessage("fields"), row);
+
+  const hiddenFields = fields.filter(({ type }) => type === FIELD_TYPE.HIDDEN);
+  const visibleFields = fields.filter(({ type }) => type !== FIELD_TYPE.HIDDEN);
 
   return (
-    <BaseComponent ref={ref} baseClassName={"row"} {...props}>
-      {row.fields.map((field, fieldIndex) => (
-        <FieldProvider
-          value={{
-            fieldIndex,
-            id: options.modifyId(field.handle, form.handle),
-            ...field,
-          }}
-          key={fieldIndex}
-        >
-          {isFunction(children) ? children(field, fieldIndex) : children}
-        </FieldProvider>
-      ))}
-    </BaseComponent>
+    <Fragment ref={ref}>
+      {hiddenFields.length > 0 && (
+        <RowFields fields={hiddenFields}>{children}</RowFields>
+      )}
+      {visibleFields.length > 0 && (
+        <BaseComponent baseClassName={"row"} {...props}>
+          <RowFields fields={visibleFields}>{children}</RowFields>
+        </BaseComponent>
+      )}
+    </Fragment>
   );
 });
+
+function RowFields({ fields, children }) {
+  const { form, options } = useFormieContext();
+
+  return fields.map((field, fieldIndex) => (
+    <FieldProvider
+      value={{
+        fieldIndex,
+        id: options.modifyId(field.handle, form.handle),
+        ...field,
+      }}
+      key={fieldIndex}
+    >
+      {isFunction(children) ? children(field, fieldIndex) : children}
+    </FieldProvider>
+  ));
+}

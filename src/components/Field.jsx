@@ -1,25 +1,37 @@
 import React, { forwardRef } from "react";
-import { attributesToProps, objectError } from "../utils/helpers";
+import {
+  attributesToProps,
+  objectError,
+  requiredPropErrorMessage,
+} from "../utils/helpers";
+import {
+  ErrorMessage as FormikErrorMessage,
+  useField as useFormikField,
+} from "formik";
 import { BaseComponent } from "./BaseComponent";
-import { ErrorMessage as FormikErrorMessage } from "formik";
-import { FIELD_POSITION } from "../types";
+import { FIELD_POSITION, FIELD_TYPE } from "../types";
 import { useFieldContext } from "./FieldContext";
 import { useFormieContext } from "./FormieContext";
+import classNames from "classnames";
 
-export const Field = forwardRef(function Field(props, ref) {
+export const Field = forwardRef(function Field({ className, ...props }, ref) {
   const { components, form, options } = useFormieContext();
   const field = useFieldContext();
+  const [, meta] = useFormikField(field?.handle);
 
-  if (!field.handle) {
-    objectError("field.handle is required", field);
-  }
+  if (!field.handle) objectError(requiredPropErrorMessage("handle"), field);
+  if (!field.type) objectError(requiredPropErrorMessage("type"), field);
+  if (!components[field.type]) objectError("No component provided", field.type);
 
-  if (!field.type) {
-    objectError("field.type is required", field);
-  }
+  const inputId = options.modifyId(field.handle, form.handle);
 
-  if (!components[field.type]) {
-    objectError("No component provided", field.type);
+  const input = React.createElement(components[field.type], {
+    id: inputId,
+    ...attributesToProps(field.inputAttributes),
+  });
+
+  if (field.type === FIELD_TYPE.HIDDEN) {
+    return input;
   }
 
   const labelPosition = field.labelPosition
@@ -32,85 +44,57 @@ export const Field = forwardRef(function Field(props, ref) {
 
   const errorPosition = form.settings.unstable_defaultFieldErrorPosition;
 
-  const label = (
-    <components.FieldLabel htmlFor={field.id}>
+  const label = field.name ? (
+    <components.FieldLabel htmlFor={inputId}>
       {field.name}
     </components.FieldLabel>
-  );
+  ) : null;
 
-  const instructions = (
+  const instructions = field.instructions ? (
     <components.FieldInstructions>
       {field.instructions}
     </components.FieldInstructions>
-  );
+  ) : null;
 
-  const input = React.createElement(components[field.type], {
-    id: options.modifyId(field.handle, form.handle),
-    ...attributesToProps(field.inputAttributes),
-  });
-
-  const error = (
+  const error = meta.error ? (
     <components.FieldErrorMessage>
       <FormikErrorMessage name={field.handle} />
     </components.FieldErrorMessage>
-  );
+  ) : null;
 
-  const generatedChildren = (
-    <>
-      {errorPosition === FIELD_POSITION.ABOVE_INPUT && error}
-      {labelPosition === FIELD_POSITION.ABOVE_INPUT && label}
-      {(instructionsPosition === FIELD_POSITION.ABOVE_INPUT ||
-        instructionsPosition === FIELD_POSITION.LEFT_INPUT) &&
+  return (
+    <BaseComponent
+      ref={ref}
+      className={classNames(
+        options.modifyClassName("field"),
+        {
+          [options.modifyClassName("error")]: meta.error,
+          [options.modifyClassName("touched")]: meta.touched,
+        },
+        className
+      )}
+      {...attributesToProps(field.containerAttributes)}
+      {...props}
+    >
+      {labelPosition !== FIELD_POSITION.BELOW_INPUT &&
+        labelPosition !== FIELD_POSITION.RIGHT_INPUT &&
+        label}
+      {instructionsPosition !== FIELD_POSITION.BELOW_INPUT &&
+        instructionsPosition !== FIELD_POSITION.RIGHT_INPUT &&
         instructions}
+      {errorPosition !== FIELD_POSITION.BELOW_INPUT &&
+        errorPosition !== FIELD_POSITION.RIGHT_INPUT &&
+        error}
       {input}
-      {labelPosition === FIELD_POSITION.BELOW_INPUT && label}
+      {(labelPosition === FIELD_POSITION.BELOW_INPUT ||
+        labelPosition === FIELD_POSITION.RIGHT_INPUT) &&
+        label}
       {(instructionsPosition === FIELD_POSITION.BELOW_INPUT ||
         instructionsPosition === FIELD_POSITION.RIGHT_INPUT) &&
         instructions}
-      {errorPosition === FIELD_POSITION.BELOW_INPUT && error}
-    </>
+      {(errorPosition === FIELD_POSITION.BELOW_INPUT ||
+        errorPosition === FIELD_POSITION.RIGHT_INPUT) &&
+        error}
+    </BaseComponent>
   );
-
-  const fieldProps = {
-    baseClassName: "field",
-    ...attributesToProps(field.containerAttributes),
-    ref,
-    ...props,
-  };
-
-  if (labelPosition === FIELD_POSITION.LEFT_INPUT) {
-    return (
-      <BaseComponent
-        style={{
-          display: "grid",
-          columnGap: options.columnGap,
-          rowGap: options.rowGap,
-          gridTemplateColumns: "auto 1fr",
-        }}
-        {...fieldProps}
-      >
-        {label}
-        {generatedChildren}
-      </BaseComponent>
-    );
-  }
-
-  if (labelPosition === FIELD_POSITION.RIGHT_INPUT) {
-    return (
-      <BaseComponent
-        style={{
-          display: "grid",
-          columnGap: options.columnGap,
-          rowGap: options.rowGap,
-          gridTemplateColumns: "1fr auto",
-        }}
-        {...fieldProps}
-      >
-        {generatedChildren}
-        {label}
-      </BaseComponent>
-    );
-  }
-
-  return <BaseComponent {...fieldProps}>{generatedChildren}</BaseComponent>;
 });
