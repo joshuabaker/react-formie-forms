@@ -12,6 +12,7 @@ export const SubmitButton = forwardRef((props, ref) => {
       ref={ref}
       disabled={isSubmitting}
       tabIndex={0}
+      baseClassName={"submit-button"}
       {...props}
     />
   );

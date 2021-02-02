@@ -1,4 +1,4 @@
-import React, { Children, forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { BaseComponent } from "./BaseComponent";
 import { FieldProvider } from "./FieldContext";
 import { isFunction } from "formik";
@@ -9,19 +9,8 @@ export const Row = forwardRef(({ children, ...props }, ref) => {
   const { form, options } = useFormieContext();
   const row = useRowContext();
 
-  const columnCount = Children.count(props.children);
-
   return (
-    <BaseComponent
-      ref={ref}
-      style={{
-        columnGap: options.styles.columnGap,
-        display: "grid",
-        gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
-        rowGap: options.styles.rowGap,
-      }}
-      {...props}
-    >
+    <BaseComponent ref={ref} baseClassName={"row"} {...props}>
       {row.fields.map((field, fieldIndex) => (
         <FieldProvider
           value={{

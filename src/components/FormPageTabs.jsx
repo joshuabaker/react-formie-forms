@@ -8,7 +8,12 @@ export const FormPageTabs = forwardRef(({ children, ...props }, ref) => {
   const { form } = useFormieContext();
 
   return (
-    <BaseComponent as={"ul"} ref={ref} {...props}>
+    <BaseComponent
+      ref={ref}
+      as={"ul"}
+      baseClassName={"form-page-tabs"}
+      {...props}
+    >
       {form.pages.map((page, pageIndex) => (
         <PageProvider value={{ pageIndex, ...page }}>
           {isFunction(children) ? children(page, pageIndex) : children}

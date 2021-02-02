@@ -29,13 +29,13 @@ export const FormieForm = forwardRef((props, ref) => {
             {pageIndex + 1} of {form.pages.length}
           </components.FormPageProgress>
         )}
-        {form.settings.errorMessagePosition === FORM_POSITION.ABOVE_FORM && (
+        {form.settings.errorMessagePosition !== FORM_POSITION.BELOW_FORM && (
           <components.FormErrorMessage>
             {formErrorMessage}
           </components.FormErrorMessage>
         )}
-        {form.settings.submitActionMessagePosition ===
-          FORM_POSITION.ABOVE_FORM && (
+        {form.settings.submitActionMessagePosition !==
+          FORM_POSITION.BELOW_FORM && (
           <components.FormSuccessMessage>
             {formSuccessMessage}
           </components.FormSuccessMessage>

@@ -1,42 +1,43 @@
 import React, { useEffect, useMemo, useState } from "react";
+import merge from "lodash/merge";
 import {
+  defaultModifyClassName,
   defaultModifyId,
   getFormDefaultValues,
-  getFormValidationSchema,
   getPageFieldHandles,
+  objectError,
   requiredPropError,
-} from "./utils";
-import {
-  BackButton,
-  ButtonGroup,
-  Field,
-  FieldErrorMessage,
-  FieldInstructions,
-  FieldLabel,
-  Form,
-  FormErrorMessage,
-  FormFooter,
-  FormHeader,
-  FormPageProgress,
-  FormPages,
-  FormPageTabs,
-  FormSuccessMessage,
-  FormTitle,
-  Input,
-  Page,
-  PageFooter,
-  PageHeader,
-  PageRows,
-  PageTab,
-  PageTitle,
-  Row,
-  SubmitButton,
-} from "./components";
-import merge from "lodash/merge";
+  requiredPropErrorMessage,
+} from "./utils/helpers";
+import { BackButton } from "./components/BackButton";
 import { BUTTON_POSITION, FIELD_POSITION, FIELD_TYPE } from "./types";
-import { useFormik } from "formik";
+import { ButtonGroup } from "./components/ButtonGroup";
+import { Field } from "./components/Field";
+import { FieldErrorMessage } from "./components/FieldErrorMessage";
+import { FieldInstructions } from "./components/FieldInstructions";
+import { FieldLabel } from "./components/FieldLabel";
 import { FileUpload } from "./components/FileUpload";
+import { Form } from "./components/Form";
+import { FormErrorMessage } from "./components/FormErrorMessage";
+import { FormFooter } from "./components/FormFooter";
+import { FormHeader } from "./components/FormHeader";
+import { FormPageProgress } from "./components/FormPageProgress";
+import { FormPages } from "./components/FormPages";
+import { FormPageTabs } from "./components/FormPageTabs";
+import { FormSuccessMessage } from "./components/FormSuccessMessage";
+import { FormTitle } from "./components/FormTitle";
+import { getFormValidationSchema } from "./utils/validation";
+import { Input } from "./components/Input";
 import { MultiLineText } from "./components/MultiLineText";
+import { Page } from "./components/Page";
+import { PageFooter } from "./components/PageFooter";
+import { PageHeader } from "./components/PageHeader";
+import { PageRows } from "./components/PageRows";
+import { PageTab } from "./components/PageTab";
+import { PageTitle } from "./components/PageTitle";
+import { Row } from "./components/Row";
+import { SubmitButton } from "./components/SubmitButton";
+import { useFormik } from "formik";
 
 export const defaultComponents = {
   [FIELD_TYPE.EMAIL]: (props) => <Input type={"email"} {...props} />,
@@ -90,6 +91,7 @@ const defaultPage = {
 
 const defaultOptions = {
   modifyId: defaultModifyId,
+  modifyClassName: defaultModifyClassName,
   styles: {
     columnGap: "1rem",
     rowGap: "1rem",
@@ -101,7 +103,7 @@ export function useFormieForm({
   form: _form,
   initialPageIndex = 0,
   initialSubmissionId,
-  initialValues,
+  initialValues: _initialValues,
   onReset = () => {},
   onSubmit,
   options: _options,
@@ -109,8 +111,8 @@ export function useFormieForm({
   ...props
 }) {
   if (!_form) requiredPropError("form");
-  if (!_form.handle) requiredPropError("form.handle");
-  if (!_form.pages) requiredPropError("form.pages");
+  if (!_form.handle) objectError(requiredPropErrorMessage("handle"), _form);
+  if (!_form.pages) objectError(requiredPropErrorMessage("pages"), _form);
   if (!onSubmit) requiredPropError("onSubmit");
 
   const [formErrorMessage, setFormErrorMessage] = useState();
@@ -139,10 +141,13 @@ export function useFormieForm({
   }, [validationSchema, page]);
 
   const defaultInitialValues = getFormDefaultValues(form);
+  const initialValues = useMemo(() => {
+    return merge({}, defaultInitialValues, _initialValues);
+  }, [form, _initialValues]);
 
   // ❤ Formik
   const formik = useFormik({
-    initialValues: initialValues ?? defaultInitialValues,
+    initialValues,
     onSubmit: handleSubmit,
     onReset: handleReset,
     validationSchema: pageValidationSchema,
@@ -195,6 +200,7 @@ export function useFormieForm({
 
         if (pageIndex === form.pages.length - 1) {
           // Reset the form
+          actions.resetForm();
           setFormErrorMessage(undefined);
           setFormSuccessMessage(data.submitActionMessage);
           setPageIndex(0);

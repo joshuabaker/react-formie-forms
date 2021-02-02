@@ -19,6 +19,10 @@ export function getFieldValidationSchema(field) {
       validation = Yup.string().email();
       break;
 
+    case FIELD_TYPE.FILE_UPLOAD:
+      validation = Yup.array().min(1);
+      break;
+
     default:
       validation = Yup.string();
       break;

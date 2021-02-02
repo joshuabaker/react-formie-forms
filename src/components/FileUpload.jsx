@@ -1,44 +1,47 @@
-import React, { forwardRef, useCallback } from "react";
+import React, { forwardRef } from "react";
 import { BaseComponent } from "./BaseComponent";
-import { useDropzone } from "react-dropzone";
 import { isFunction, useField as useFormikField } from "formik";
+import { useDropzone } from "react-dropzone";
 import { useFieldContext } from "./FieldContext";
 
 export const FileUpload = forwardRef(
   ({ children, dropzoneProps, ...props }, ref) => {
     const { handle, id, required } = useFieldContext();
-    const [, , helpers] = useFormikField(handle);
-    const { setValue } = helpers;
-
-    const onDrop = useCallback(
-      (acceptedFiles) => {
-        setValue(handle, acceptedFiles[0]);
-      },
-      [setValue]
-    );
+    const [field, , helpers] = useFormikField(handle);
 
     const dropzone = useDropzone({
-      onDrop,
+      onDrop: helpers.setValue,
       maxFiles: 1,
       ...dropzoneProps,
     });
 
-    const { acceptedFiles, getRootProps, getInputProps } = dropzone;
+    const { getRootProps, getInputProps } = dropzone;
+
+    const files = Array.isArray(field.value)
+      ? field.value
+      : field.value && field.value !== ""
+      ? [field.value]
+      : [];
 
     return (
-      <BaseComponent ref={ref} {...getRootProps()} {...props}>
+      <BaseComponent
+        ref={ref}
+        baseClassName={"file-upload"}
+        {...getRootProps()}
+        {...props}
+      >
         <input name={handle} id={id} required={required} {...getInputProps()} />
         {children ? (
           isFunction(children) ? (
-            children({ dropzone })
+            children({ dropzone, files })
           ) : (
             children
           )
         ) : (
           <>
             <BaseComponent>Choose file…</BaseComponent>
-            {acceptedFiles.length > 0 &&
-              acceptedFiles.map((file, fileIndex) => (
+            {files.length > 0 &&
+              files.map((file, fileIndex) => (
                 <BaseComponent key={fileIndex}>{file.name}</BaseComponent>
               ))}
           </>

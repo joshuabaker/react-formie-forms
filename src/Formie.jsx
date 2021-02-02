@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { FormieForm } from "./components/FormieForm";
-import { FormieProvider } from "./components";
+import { FormieProvider } from "./components/FormieContext";
 import { useFormieForm } from "./useFormieForm";
 
 export const Formie = forwardRef(

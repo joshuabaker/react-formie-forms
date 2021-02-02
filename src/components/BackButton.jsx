@@ -12,12 +12,13 @@ export const BackButton = forwardRef((props, ref) => {
 
   return (
     <BaseComponent
+      ref={ref}
       as={"button"}
       type={"button"}
-      ref={ref}
       onClick={handleClick}
       disabled={isSubmitting}
       tabIndex={0}
+      baseClassName={"back-button"}
       {...props}
     />
   );

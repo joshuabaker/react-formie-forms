@@ -13,7 +13,7 @@ export const PageTab = forwardRef(({ children, ...props }, ref) => {
   }
 
   return (
-    <BaseComponent as={"li"} ref={ref} {...props}>
+    <BaseComponent as={"li"} ref={ref} baseClassName={"page-tab"} {...props}>
       <BaseComponent as={"a"} href={"#"} onClick={handleClick}>
         {children}
       </BaseComponent>

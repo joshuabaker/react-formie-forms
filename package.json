@@ -1,16 +1,10 @@
 {
   "name": "react-formie-forms",
-  "version": "1.0.0-alpha.32",
+  "version": "1.0.0-alpha.35",
   "description": "Renders Craft CMS Formie forms in React apps.",
   "source": "src/index.js",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "files": [
-    "components",
-    "dist",
-    "types",
-    "utils"
-  ],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -39,9 +33,11 @@
     "react": "^16.0.0 || ^17.0.0"
   },
   "dependencies": {
-    "cross-fetch": "^3.0.6",
+    "classnames": "^2.2.6",
     "formik": "^2.2.6",
+    "http-proxy-middleware": "^1.0.6",
     "lodash": "^4.17.20",
+    "object-to-formdata": "^4.1.0",
     "react-dropzone": "^11.2.4",
     "react-textarea-autosize": "^8.3.0",
     "yup": "^0.32.8"
@@ -52,7 +48,6 @@
     "@babel/plugin-transform-runtime": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
-    "@rollup/plugin-alias": "^3.1.1",
     "@rollup/plugin-babel": "^5.2.2",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",

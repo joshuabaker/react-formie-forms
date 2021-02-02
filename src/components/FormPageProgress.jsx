@@ -13,6 +13,7 @@ export const FormPageProgress = forwardRef((props, ref) => {
       ref={ref}
       max={pageCount}
       value={pageNumber}
+      baseClassName={"form-page-progress"}
       {...props}
     />
   );

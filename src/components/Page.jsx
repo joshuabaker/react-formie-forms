@@ -6,10 +6,8 @@ export const Page = forwardRef(({ children, ...props }, ref) => {
   const { isSubmitting } = useFormieContext();
 
   return (
-    <BaseComponent ref={ref} {...props}>
-      <BaseComponent as={"fieldset"} disabled={isSubmitting}>
-        {children}
-      </BaseComponent>
+    <BaseComponent ref={ref} baseClassName={"page"} {...props}>
+      <fieldset disabled={isSubmitting}>{children}</fieldset>
     </BaseComponent>
   );
 });

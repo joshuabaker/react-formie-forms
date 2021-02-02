@@ -1,7 +1,17 @@
 import React from "react";
+import classNames from "classnames";
 import { Form as FormikForm } from "formik";
 import { forwardRef } from "react/cjs/react.production.min";
+import { useFormieContext } from "./FormieContext";
 
-export const Form = forwardRef((props, ref) => {
-  return <FormikForm ref={ref} {...props} />;
+export const Form = forwardRef(({ className, ...props }, ref) => {
+  const { options } = useFormieContext();
+
+  return (
+    <FormikForm
+      ref={ref}
+      className={classNames(options.modifyClassName("form"), className)}
+      {...props}
+    />
+  );
 });

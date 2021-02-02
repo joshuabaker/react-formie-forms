@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { attributesToProps, objectError } from "../utils";
+import { attributesToProps, objectError } from "../utils/helpers";
 import { BaseComponent } from "./BaseComponent";
 import { ErrorMessage as FormikErrorMessage } from "formik";
 import { FIELD_POSITION } from "../types";
@@ -45,7 +45,7 @@ export const Field = forwardRef(function Field(props, ref) {
   );
 
   const input = React.createElement(components[field.type], {
-    id: options.modifyId(field.handle),
+    id: options.modifyId(field.handle, form.handle),
     ...attributesToProps(field.inputAttributes),
   });
 
@@ -72,6 +72,7 @@ export const Field = forwardRef(function Field(props, ref) {
   );
 
   const fieldProps = {
+    baseClassName: "field",
     ...attributesToProps(field.containerAttributes),
     ref,
     ...props,
