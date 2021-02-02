@@ -6,7 +6,9 @@ export const BaseComponent = forwardRef(
   ({ as = "div", baseClassName, className, children, ...props }, ref) => {
     const { options } = useFormieContext();
 
-    if (Children.count(children) === 0) {
+    if (
+      Children.toArray(children).filter((child) => child !== null).length === 0
+    ) {
       return null;
     }
 
