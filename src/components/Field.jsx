@@ -1,18 +1,18 @@
+import classNames from "classnames";
+import {
+  ErrorMessage as FormikErrorMessage,
+  useField as useFormikField,
+} from "formik";
 import React, { forwardRef } from "react";
+import { FIELD_POSITION, FIELD_TYPE } from "../types";
 import {
   attributesToProps,
   objectError,
   requiredPropErrorMessage,
 } from "../utils/helpers";
-import {
-  ErrorMessage as FormikErrorMessage,
-  useField as useFormikField,
-} from "formik";
 import { BaseComponent } from "./BaseComponent";
-import { FIELD_POSITION, FIELD_TYPE } from "../types";
 import { useFieldContext } from "./FieldContext";
 import { useFormieContext } from "./FormieContext";
-import classNames from "classnames";
 
 export const Field = forwardRef(function Field({ className, ...props }, ref) {
   const { components, form, options } = useFormieContext();
@@ -56,11 +56,12 @@ export const Field = forwardRef(function Field({ className, ...props }, ref) {
     </components.FieldInstructions>
   ) : null;
 
-  const error = meta.error && meta.touched ? (
-    <components.FieldErrorMessage>
-      <FormikErrorMessage name={field.handle} />
-    </components.FieldErrorMessage>
-  ) : null;
+  const error =
+    meta.error && (form.submitCount || meta.touched) ? (
+      <components.FieldErrorMessage>
+        <FormikErrorMessage name={field.handle} />
+      </components.FieldErrorMessage>
+    ) : null;
 
   return (
     <BaseComponent
