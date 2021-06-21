@@ -18,11 +18,9 @@ export function getFieldValidationSchema(field) {
     case FIELD_TYPE.CHECKBOXES:
     case FIELD_TYPE.FILE_UPLOAD:
       validation = Yup.array();
-
       if (required) {
         validation = validation.min(1);
       }
-
       break;
 
     case FIELD_TYPE.EMAIL:
