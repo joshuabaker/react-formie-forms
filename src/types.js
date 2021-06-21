@@ -19,9 +19,12 @@ export const FORM_POSITION = {
 };
 
 export const FIELD_TYPE = {
+  CHECKBOXES: "verbb\\formie\\fields\\formfields\\Checkboxes",
+  DROPDOWN: "verbb\\formie\\fields\\formfields\\Dropdown",
   EMAIL: "verbb\\formie\\fields\\formfields\\Email",
   FILE_UPLOAD: "verbb\\formie\\fields\\formfields\\FileUpload",
   HIDDEN: "verbb\\formie\\fields\\formfields\\Hidden",
   MULTI_LINE_TEXT: "verbb\\formie\\fields\\formfields\\MultiLineText",
+  RADIO: "verbb\\formie\\fields\\formfields\\Radio",
   SINGLE_LINE_TEXT: "verbb\\formie\\fields\\formfields\\SingleLineText",
 };
