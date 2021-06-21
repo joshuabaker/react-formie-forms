@@ -15,6 +15,10 @@ export function getFieldValidationSchema(field) {
   let validation;
 
   switch (type) {
+    case FIELD_TYPE.CHECKBOXES:
+      validation = Yup.array();
+      break;
+
     case FIELD_TYPE.EMAIL:
       validation = Yup.string().email();
       break;
