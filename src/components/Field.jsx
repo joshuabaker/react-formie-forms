@@ -56,7 +56,7 @@ export const Field = forwardRef(function Field({ className, ...props }, ref) {
     </components.FieldInstructions>
   ) : null;
 
-  const error = meta.error ? (
+  const error = meta.error && meta.touched ? (
     <components.FieldErrorMessage>
       <FormikErrorMessage name={field.handle} />
     </components.FieldErrorMessage>
