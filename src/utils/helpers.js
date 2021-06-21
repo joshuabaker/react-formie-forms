@@ -1,10 +1,10 @@
-import React from "react";
 import flatMap from "lodash/flatMap";
 import keyBy from "lodash/keyBy";
 import map from "lodash/map";
 import mapValues from "lodash/mapValues";
 import transform from "lodash/transform";
-import { BUTTON_POSITION } from "../types";
+import React from "react";
+import { BUTTON_POSITION, FIELD_TYPE } from "../types";
 
 function baseModify(...parts) {
   return ["fui", ...parts].filter((part) => part).join("-");
@@ -52,7 +52,15 @@ export function getPageFieldHandles(page) {
 export function getFormDefaultValues(form) {
   return transform(
     getFormFields(form),
-    (result, field) => (result[field?.handle] = ""),
+    (result, { type, handle, defaultValue = "", options = [] }) => {
+      if (type === FIELD_TYPE.CHECKBOXES) {
+        result[handle] = options
+          .filter(({ isDefault }) => isDefault)
+          .map(({ value }) => value);
+      } else {
+        result[handle] = defaultValue;
+      }
+    },
     {}
   );
 }
