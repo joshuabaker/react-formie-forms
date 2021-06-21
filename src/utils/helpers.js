@@ -52,13 +52,13 @@ export function getPageFieldHandles(page) {
 export function getFormDefaultValues(form) {
   return transform(
     getFormFields(form),
-    (result, { type, handle, defaultValue = "", options = [] }) => {
-      if (type === FIELD_TYPE.CHECKBOXES) {
+    (result, { type, handle, defaultValue, options }) => {
+      if (type === FIELD_TYPE.CHECKBOXES && options) {
         result[handle] = options
           .filter(({ isDefault }) => isDefault)
-          .map(({ value }) => value);
+          .map(({ value =  }) => value ?? '');
       } else {
-        result[handle] = defaultValue;
+        result[handle] = defaultValue ?? '';
       }
     },
     {}
