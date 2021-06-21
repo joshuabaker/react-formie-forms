@@ -52,13 +52,20 @@ export function getPageFieldHandles(page) {
 export function getFormDefaultValues(form) {
   return transform(
     getFormFields(form),
-    (result, { type, handle, defaultValue, options }) => {
-      if (type === FIELD_TYPE.CHECKBOXES && options) {
-        result[handle] = options
-          .filter(({ isDefault }) => isDefault)
-          .map(({ value }) => value ?? "");
-      } else {
-        result[handle] = defaultValue ?? "";
+    (result, { type, handle, defaultValue = "", options = [] }) => {
+      switch (type) {
+        case FIELD_TYPE.CHECKBOXES:
+          return (result[handle] = options
+            .filter(({ isDefault, value }) => isDefault && value)
+            .map(({ value }) => value));
+
+        case FIELD_TYPE.RADIO:
+        case FIELD_TYPE.DROPDOWN:
+          return (result[handle] =
+            options.find(({ isDefault }) => isDefault)?.value ?? "");
+
+        default:
+          return (result[handle] = defaultValue ?? "");
       }
     },
     {}
