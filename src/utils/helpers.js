@@ -56,9 +56,9 @@ export function getFormDefaultValues(form) {
       if (type === FIELD_TYPE.CHECKBOXES && options) {
         result[handle] = options
           .filter(({ isDefault }) => isDefault)
-          .map(({ value =  }) => value ?? '');
+          .map(({ value }) => value ?? "");
       } else {
-        result[handle] = defaultValue ?? '';
+        result[handle] = defaultValue ?? "";
       }
     },
     {}
