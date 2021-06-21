@@ -16,15 +16,17 @@ export function getFieldValidationSchema(field) {
 
   switch (type) {
     case FIELD_TYPE.CHECKBOXES:
+    case FIELD_TYPE.FILE_UPLOAD:
       validation = Yup.array();
+
+      if (required) {
+        validation = validation.min(1);
+      }
+
       break;
 
     case FIELD_TYPE.EMAIL:
       validation = Yup.string().email();
-      break;
-
-    case FIELD_TYPE.FILE_UPLOAD:
-      validation = Yup.array().min(1);
       break;
 
     default:
