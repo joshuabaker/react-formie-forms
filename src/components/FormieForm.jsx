@@ -29,17 +29,19 @@ export const FormieForm = forwardRef((props, ref) => {
             {pageIndex + 1} of {form.pages.length}
           </components.FormPageProgress>
         )}
-        {form.settings.errorMessagePosition !== FORM_POSITION.BELOW_FORM && (
-          <components.FormErrorMessage>
-            {formErrorMessage}
-          </components.FormErrorMessage>
-        )}
+        {form.settings.errorMessagePosition !== FORM_POSITION.BELOW_FORM &&
+          formErrorMessage && (
+            <components.FormErrorMessage>
+              {formErrorMessage}
+            </components.FormErrorMessage>
+          )}
         {form.settings.submitActionMessagePosition !==
-          FORM_POSITION.BELOW_FORM && (
-          <components.FormSuccessMessage>
-            {formSuccessMessage}
-          </components.FormSuccessMessage>
-        )}
+          FORM_POSITION.BELOW_FORM &&
+          formSuccessMessage && (
+            <components.FormSuccessMessage>
+              {formSuccessMessage}
+            </components.FormSuccessMessage>
+          )}
       </components.FormHeader>
       <components.FormPages>
         <PageProvider value={page}>
@@ -71,16 +73,18 @@ export const FormieForm = forwardRef((props, ref) => {
       </components.FormPages>
       <components.FormFooter>
         {form.settings.submitActionMessagePosition ===
-          FORM_POSITION.BELOW_FORM && (
-          <components.FormSuccessMessage>
-            {formSuccessMessage}
-          </components.FormSuccessMessage>
-        )}
-        {form.settings.errorMessagePosition === FORM_POSITION.BELOW_FORM && (
-          <components.FormErrorMessage>
-            {formErrorMessage}
-          </components.FormErrorMessage>
-        )}
+          FORM_POSITION.BELOW_FORM &&
+          formSuccessMessage && (
+            <components.FormSuccessMessage>
+              {formSuccessMessage}
+            </components.FormSuccessMessage>
+          )}
+        {form.settings.errorMessagePosition === FORM_POSITION.BELOW_FORM &&
+          formErrorMessage && (
+            <components.FormErrorMessage>
+              {formErrorMessage}
+            </components.FormErrorMessage>
+          )}
       </components.FormFooter>
     </components.Form>
   );
