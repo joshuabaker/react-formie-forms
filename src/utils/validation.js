@@ -34,7 +34,9 @@ export function getFieldValidationSchema(field) {
   }
 
   if (required) {
-    validation = validation.required(errorMessage);
+    validation = errorMessage
+      ? validation.required(errorMessage)
+      : validation.required();
   }
 
   if (limit) {
