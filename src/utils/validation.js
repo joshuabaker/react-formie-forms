@@ -1,5 +1,5 @@
-import * as Yup from "yup";
 import mapValues from "lodash/mapValues";
+import * as Yup from "yup";
 import { FIELD_TYPE } from "../types";
 import { getFormFields, keyByHandle } from "./helpers";
 
@@ -10,7 +10,8 @@ export function getFormValidationSchema(form) {
 }
 
 export function getFieldValidationSchema(field) {
-  const { type, required, limit, limitType, limitAmount, name } = field;
+  const { errorMessage, limit, limitAmount, limitType, name, required, type } =
+    field;
 
   let validation;
 
@@ -33,7 +34,7 @@ export function getFieldValidationSchema(field) {
   }
 
   if (required) {
-    validation = validation.required();
+    validation = validation.required(errorMessage);
   }
 
   if (limit) {
