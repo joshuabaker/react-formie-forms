@@ -33,14 +33,20 @@ export const FormieForm = forwardRef((props, ref) => {
         )}
         {form.settings.errorMessagePosition !== FORM_POSITION.BELOW_FORM &&
           formErrorMessage && (
-            <components.FormErrorMessage ref={formErrorMessageRef}>
+            <components.FormErrorMessage
+              ref={formErrorMessageRef}
+              tabIndex={-1}
+            >
               {formErrorMessage}
             </components.FormErrorMessage>
           )}
         {form.settings.submitActionMessagePosition !==
           FORM_POSITION.BELOW_FORM &&
           formSuccessMessage && (
-            <components.FormSuccessMessage ref={formSuccessMessageRef}>
+            <components.FormSuccessMessage
+              ref={formSuccessMessageRef}
+              tabIndex={-1}
+            >
               {formSuccessMessage}
             </components.FormSuccessMessage>
           )}
@@ -77,13 +83,19 @@ export const FormieForm = forwardRef((props, ref) => {
         {form.settings.submitActionMessagePosition ===
           FORM_POSITION.BELOW_FORM &&
           formSuccessMessage && (
-            <components.FormSuccessMessage ref={formSuccessMessageRef}>
+            <components.FormSuccessMessage
+              ref={formSuccessMessageRef}
+              tabIndex={-1}
+            >
               {formSuccessMessage}
             </components.FormSuccessMessage>
           )}
         {form.settings.errorMessagePosition === FORM_POSITION.BELOW_FORM &&
           formErrorMessage && (
-            <components.FormErrorMessage ref={formErrorMessageRef}>
+            <components.FormErrorMessage
+              ref={formErrorMessageRef}
+              tabIndex={-1}
+            >
               {formErrorMessage}
             </components.FormErrorMessage>
           )}
