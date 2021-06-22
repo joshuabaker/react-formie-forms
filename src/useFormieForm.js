@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import merge from "lodash/merge";
 import {
   defaultModifyClassName,
@@ -115,6 +115,9 @@ export function useFormieForm({
   if (!_form.pages) objectError(requiredPropErrorMessage("pages"), _form);
   if (!onSubmit) requiredPropError("onSubmit");
 
+  const formErrorMessageRef = useRef();
+  const formSuccessMessageRef = useRef();
+
   const [formErrorMessage, setFormErrorMessage] = useState();
   const [formSuccessMessage, setFormSuccessMessage] = useState();
   const [pageIndex, setPageIndex] = useState(initialPageIndex);
@@ -205,6 +208,11 @@ export function useFormieForm({
           setFormSuccessMessage(data.submitActionMessage);
           setPageIndex(0);
           setSubmissionId(undefined);
+
+          // Focus on the form success message element
+          if (formSuccessMessageRef.current) {
+            formSuccessMessageRef.current.focus();
+          }
         } else {
           // Go to the next page
           setPageIndex((page) => Math.min(page + 1, form.pages.length - 1));
@@ -214,6 +222,11 @@ export function useFormieForm({
       })
       .catch((error) => {
         setFormErrorMessage(error);
+
+        // Focus on the form error message element
+        if (formErrorMessageRef.current) {
+          formErrorMessageRef.current.focus();
+        }
       });
   }
 
@@ -227,7 +240,9 @@ export function useFormieForm({
     components,
     form,
     formErrorMessage,
+    formErrorMessageRef,
     formSuccessMessage,
+    formSuccessMessageRef,
     options,
     page,
     pageIndex,
