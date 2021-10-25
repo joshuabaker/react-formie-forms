@@ -1,3 +1,4 @@
+import isString from "lodash/isString";
 import flatMap from "lodash/flatMap";
 import keyBy from "lodash/keyBy";
 import map from "lodash/map";
@@ -42,7 +43,13 @@ export function getFormFields(form) {
 }
 
 export function getPageFields(page) {
-  return flatMap(page.rows, "fields");
+  return flatMap(page.rows, "fields").map((field) => {
+    if (field.enableConditions && isString(field.conditions)) {
+      field.conditions = JSON.parse(field.conditions);
+    }
+
+    return field;
+  });
 }
 
 export function getPageFieldHandles(page) {
