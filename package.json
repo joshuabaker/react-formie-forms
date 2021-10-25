@@ -51,7 +51,6 @@
     "@rollup/plugin-babel": "^5.2.2",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",
-    "react": "^16.14.0",
     "rollup": "^2.35.1",
     "rollup-plugin-delete": "^2.0.0"
   }
