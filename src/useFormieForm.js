@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import merge from "lodash/merge";
+import noop from "lodash/noop";
+import { filterConditionalField } from "./utils/conditional";
 import {
   defaultModifyClassName,
   defaultModifyId,
@@ -104,7 +106,7 @@ export function useFormieForm({
   initialPageIndex = 0,
   initialSubmissionId,
   initialValues: _initialValues,
-  onReset = () => {},
+  onReset = noop,
   onSubmit,
   options: _options,
   validationSchema: _validationSchema,
@@ -124,9 +126,28 @@ export function useFormieForm({
     return merge({}, defaultForm, _form);
   }, [_form]);
 
+  const defaultInitialValues = getFormDefaultValues(form);
+
+  const initialValues = useMemo(() => {
+    return merge({}, defaultInitialValues, _initialValues);
+  }, [form, _initialValues]);
+
+  const [currentValues, setCurrentValues] = useState(initialValues);
+
   const page = useMemo(() => {
-    return merge({}, defaultPage, form.pages[pageIndex]);
-  }, [form, pageIndex]);
+    const page = merge({}, defaultPage, form.pages[pageIndex]);
+
+    return {
+      ...page,
+      rows: page.rows.map((row) => ({
+        ...row,
+        fields: row.fields.filter((field) =>
+          // Filter out any fields that should not be shown or validated based on `conditions`
+          filterConditionalField(field, currentValues)
+        ),
+      })),
+    };
+  }, [form, pageIndex, currentValues]);
 
   const options = useMemo(() => {
     return merge({}, defaultOptions, _options);
@@ -140,11 +161,6 @@ export function useFormieForm({
     return validationSchema.pick(getPageFieldHandles(page));
   }, [validationSchema, page]);
 
-  const defaultInitialValues = getFormDefaultValues(form);
-  const initialValues = useMemo(() => {
-    return merge({}, defaultInitialValues, _initialValues);
-  }, [form, _initialValues]);
-
   // ❤ Formik
   const formik = useFormik({
     initialValues,
@@ -153,6 +169,10 @@ export function useFormieForm({
     validationSchema: pageValidationSchema,
     ...props,
   });
+
+  useEffect(() => {
+    setCurrentValues(formik.values);
+  }, [formik.values]);
 
   const imperativeValues = {
     handle: form.handle,

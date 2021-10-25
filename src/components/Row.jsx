@@ -11,7 +11,9 @@ export const Row = forwardRef(({ children, ...props }, ref) => {
   const row = useRowContext();
   const { fields } = row;
 
-  if (fields.length === 0) objectError(requiredPropErrorMessage("fields"), row);
+  if (fields.length === 0) {
+    return null;
+  }
 
   const hiddenFields = fields.filter(({ type }) => type === FIELD_TYPE.HIDDEN);
   const visibleFields = fields.filter(({ type }) => type !== FIELD_TYPE.HIDDEN);
