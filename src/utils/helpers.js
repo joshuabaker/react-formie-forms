@@ -1,4 +1,3 @@
-import isString from "lodash/isString";
 import flatMap from "lodash/flatMap";
 import keyBy from "lodash/keyBy";
 import map from "lodash/map";
@@ -6,6 +5,18 @@ import mapValues from "lodash/mapValues";
 import transform from "lodash/transform";
 import React from "react";
 import { BUTTON_POSITION, FIELD_TYPE } from "../types";
+
+export const validationSchemaProp = "__validationSchema";
+export const isValidProp = "__isValid";
+export const isShownProp = "__isShown";
+
+export function filterInvalid(obj) {
+  return !obj[isValidProp];
+}
+
+export function filterShouldShow(obj) {
+  return !!obj[isShownProp];
+}
 
 function baseModify(...parts) {
   return ["fui", ...parts].filter((part) => part).join("-");
@@ -43,17 +54,7 @@ export function getFormFields(form) {
 }
 
 export function getPageFields(page) {
-  return flatMap(page.rows, "fields").map((field) => {
-    if (field.enableConditions && isString(field.conditions)) {
-      field.conditions = JSON.parse(field.conditions);
-    }
-
-    return field;
-  });
-}
-
-export function getPageFieldHandles(page) {
-  return getFieldHandles(getPageFields(page));
+  return flatMap(page.rows, "fields");
 }
 
 export function getFormDefaultValues(form) {
@@ -102,4 +103,41 @@ export function getButtonGroupJustifyContent(buttonsPosition) {
     default:
       return "flex-start";
   }
+}
+
+export function parseRawForm(form) {
+  if (!form.handle) objectError(requiredPropErrorMessage("handle"), form);
+  if (!form.pages) objectError(requiredPropErrorMessage("pages"), form);
+
+  form.pages = form.pages.map(parseRawPage);
+
+  return form;
+}
+
+export function parseRawPage(page) {
+  if (!page.rows) objectError(requiredPropErrorMessage("page"), page);
+
+  page.rows = page.rows.map(parseRawRow);
+
+  if (page?.settings?.enablePageConditions && page?.settings?.pageConditions) {
+    page.settings.pageConditions = JSON.parse(page.settings.pageConditions);
+  }
+
+  return page;
+}
+
+export function parseRawRow(row) {
+  if (!row.fields) objectError(requiredPropErrorMessage("fields"), row);
+
+  row.fields = row.fields.map(parseRawField);
+
+  return row;
+}
+
+export function parseRawField(field) {
+  if (field?.enableConditions && field?.conditions) {
+    field.conditions = JSON.parse(field.conditions);
+  }
+
+  return field;
 }

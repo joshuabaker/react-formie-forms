@@ -1,10 +1,26 @@
-import * as Yup from "yup";
 import mapValues from "lodash/mapValues";
+import * as Yup from "yup";
 import { FIELD_TYPE } from "../types";
-import { getFormFields, keyByHandle } from "./helpers";
+import {
+  filterShouldShow,
+  getFormFields,
+  getPageFields,
+  keyByHandle,
+} from "./helpers";
 
+/**
+ * @deprecated
+ * @param form
+ * @returns {*}
+ */
 export function getFormValidationSchema(form) {
   const fields = keyByHandle(getFormFields(form));
+  const validation = mapValues(fields, getFieldValidationSchema);
+  return Yup.object().shape(validation);
+}
+
+export function getPageValidationSchema(page) {
+  const fields = keyByHandle(getPageFields(page).filter(filterShouldShow));
   const validation = mapValues(fields, getFieldValidationSchema);
   return Yup.object().shape(validation);
 }

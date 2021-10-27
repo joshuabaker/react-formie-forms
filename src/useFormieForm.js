@@ -1,18 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useFormik } from "formik";
+import { findLastIndex } from "lodash";
+import findIndex from "lodash/findIndex";
 import merge from "lodash/merge";
 import noop from "lodash/noop";
-import { filterConditionalField } from "./utils/conditional";
-import {
-  defaultModifyClassName,
-  defaultModifyId,
-  getFormDefaultValues,
-  getPageFieldHandles,
-  objectError,
-  requiredPropError,
-  requiredPropErrorMessage,
-} from "./utils/helpers";
+import React, { useEffect, useMemo, useState } from "react";
 import { BackButton } from "./components/BackButton";
-import { BUTTON_POSITION, FIELD_POSITION, FIELD_TYPE } from "./types";
 import { ButtonGroup } from "./components/ButtonGroup";
 import { Field } from "./components/Field";
 import { FieldErrorMessage } from "./components/FieldErrorMessage";
@@ -28,7 +20,6 @@ import { FormPages } from "./components/FormPages";
 import { FormPageTabs } from "./components/FormPageTabs";
 import { FormSuccessMessage } from "./components/FormSuccessMessage";
 import { FormTitle } from "./components/FormTitle";
-import { getFormValidationSchema } from "./utils/validation";
 import { Input } from "./components/Input";
 import { MultiLineText } from "./components/MultiLineText";
 import { Page } from "./components/Page";
@@ -39,7 +30,24 @@ import { PageTab } from "./components/PageTab";
 import { PageTitle } from "./components/PageTitle";
 import { Row } from "./components/Row";
 import { SubmitButton } from "./components/SubmitButton";
-import { useFormik } from "formik";
+import { BUTTON_POSITION, FIELD_POSITION, FIELD_TYPE } from "./types";
+import {
+  shouldShowConditionalField,
+  shouldShowConditionalPage,
+} from "./utils/conditional";
+import {
+  defaultModifyClassName,
+  defaultModifyId,
+  getFormDefaultValues,
+  isValidProp,
+  parseRawForm,
+  requiredPropError,
+  isShownProp,
+  validationSchemaProp,
+  filterInvalid,
+  filterShouldShow,
+} from "./utils/helpers";
+import { getPageValidationSchema } from "./utils/validation";
 
 export const defaultComponents = {
   [FIELD_TYPE.EMAIL]: (props) => <Input type={"email"} {...props} />,
@@ -113,8 +121,6 @@ export function useFormieForm({
   ...props
 }) {
   if (!_form) requiredPropError("form");
-  if (!_form.handle) objectError(requiredPropErrorMessage("handle"), _form);
-  if (!_form.pages) objectError(requiredPropErrorMessage("pages"), _form);
   if (!onSubmit) requiredPropError("onSubmit");
 
   const [formErrorMessage, setFormErrorMessage] = useState();
@@ -123,55 +129,63 @@ export function useFormieForm({
   const [submissionId, setSubmissionId] = useState(initialSubmissionId);
 
   const form = useMemo(() => {
-    return merge({}, defaultForm, _form);
+    return parseRawForm(merge({}, defaultForm, _form));
   }, [_form]);
 
-  const defaultInitialValues = getFormDefaultValues(form);
+  const defaultInitialValues = useMemo(() => {
+    return getFormDefaultValues(form);
+  }, [form]);
 
   const initialValues = useMemo(() => {
     return merge({}, defaultInitialValues, _initialValues);
-  }, [form, _initialValues]);
+  }, [defaultInitialValues, _initialValues]);
 
-  const [currentValues, setCurrentValues] = useState(initialValues);
+  const [formValues, setFormValues] = useState(initialValues);
+
+  const pages = useMemo(() => {
+    return form.pages.map((page) => {
+      page.rows = page.rows.map((row) => ({
+        ...row,
+        fields: row.fields.map((field) => ({
+          ...field,
+          [isShownProp]: shouldShowConditionalField(field, formValues),
+        })),
+      }));
+
+      const validationSchema = getPageValidationSchema(page);
+      const isShown = shouldShowConditionalPage(page, formValues);
+
+      return {
+        ...page,
+        [isValidProp]:
+          !isShown || (isShown && validationSchema.isValidSync(formValues)),
+        [isShownProp]: isShown,
+        [validationSchemaProp]: validationSchema,
+      };
+    });
+  }, [form.pages, formValues]);
+
+  console.log({ pages });
 
   const page = useMemo(() => {
-    const page = merge({}, defaultPage, form.pages[pageIndex]);
-
-    return {
-      ...page,
-      rows: page.rows.map((row) => ({
-        ...row,
-        fields: row.fields.filter((field) =>
-          // Filter out any fields that should not be shown or validated based on `conditions`
-          filterConditionalField(field, currentValues)
-        ),
-      })),
-    };
-  }, [form, pageIndex, currentValues]);
+    return merge({}, defaultPage, pages[pageIndex]);
+  }, [pages, pageIndex]);
 
   const options = useMemo(() => {
     return merge({}, defaultOptions, _options);
   }, [_options]);
-
-  const validationSchema = useMemo(() => {
-    return _validationSchema ?? getFormValidationSchema(form);
-  }, [form]);
-
-  const pageValidationSchema = useMemo(() => {
-    return validationSchema.pick(getPageFieldHandles(page));
-  }, [validationSchema, page]);
 
   // ❤ Formik
   const formik = useFormik({
     initialValues,
     onSubmit: handleSubmit,
     onReset: handleReset,
-    validationSchema: pageValidationSchema,
+    validationSchema: page[validationSchemaProp],
     ...props,
   });
 
   useEffect(() => {
-    setCurrentValues(formik.values);
+    setFormValues(formik.values);
   }, [formik.values]);
 
   const imperativeValues = {
@@ -218,7 +232,7 @@ export function useFormieForm({
           return Promise.reject(data.errorMessage ?? data.error);
         }
 
-        if (pageIndex === form.pages.length - 1) {
+        if (pageIndex === pages.length - 1) {
           // Reset the form
           actions.resetForm();
           setFormErrorMessage(undefined);
@@ -227,7 +241,18 @@ export function useFormieForm({
           setSubmissionId(undefined);
         } else {
           // Go to the next page
-          setPageIndex((page) => Math.min(page + 1, form.pages.length - 1));
+          const firstInvalidPageIndex = pages.findIndex(filterInvalid);
+          const nextShownPageIndex = findIndex(
+            pages,
+            filterShouldShow,
+            pageIndex + 1
+          );
+
+          setPageIndex(
+            firstInvalidPageIndex >= 0
+              ? firstInvalidPageIndex
+              : nextShownPageIndex
+          );
         }
 
         return Promise.resolve(data);
@@ -251,13 +276,11 @@ export function useFormieForm({
     options,
     page,
     pageIndex,
-    pageValidationSchema,
     setFormErrorMessage,
     setFormSuccessMessage,
     setPageIndex,
     setSubmissionId,
     submissionId,
-    validationSchema,
     ...formik,
   };
 }

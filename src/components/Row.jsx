@@ -1,15 +1,15 @@
-import React, { forwardRef, Fragment } from "react";
-import { BaseComponent } from "./BaseComponent";
-import { FIELD_TYPE } from "../types";
-import { FieldProvider } from "./FieldContext";
 import { isFunction } from "formik";
+import React, { forwardRef, Fragment } from "react";
+import { FIELD_TYPE } from "../types";
+import { filterShouldShow } from "../utils/helpers";
+import { BaseComponent } from "./BaseComponent";
+import { FieldProvider } from "./FieldContext";
 import { useFormieContext } from "./FormieContext";
 import { useRowContext } from "./RowContext";
-import { objectError, requiredPropErrorMessage } from "../utils/helpers";
 
 export const Row = forwardRef(({ children, ...props }, ref) => {
   const row = useRowContext();
-  const { fields } = row;
+  const fields = row.fields.filter(filterShouldShow);
 
   if (fields.length === 0) {
     return null;
