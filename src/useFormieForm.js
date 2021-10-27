@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import { findLastIndex } from "lodash";
 import findIndex from "lodash/findIndex";
 import merge from "lodash/merge";
 import noop from "lodash/noop";
@@ -38,14 +37,14 @@ import {
 import {
   defaultModifyClassName,
   defaultModifyId,
+  filterInvalid,
+  filterShouldShow,
   getFormDefaultValues,
+  isShownProp,
   isValidProp,
   parseRawForm,
   requiredPropError,
-  isShownProp,
   validationSchemaProp,
-  filterInvalid,
-  filterShouldShow,
 } from "./utils/helpers";
 import { getPageValidationSchema } from "./utils/validation";
 
@@ -164,8 +163,6 @@ export function useFormieForm({
       };
     });
   }, [form.pages, formValues]);
-
-  console.log({ pages });
 
   const page = useMemo(() => {
     return merge({}, defaultPage, pages[pageIndex]);
