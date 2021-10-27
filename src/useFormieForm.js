@@ -1,36 +1,40 @@
-import { useFormik } from 'formik'
-import findIndex from 'lodash/findIndex'
-import merge from 'lodash/merge'
-import noop from 'lodash/noop'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { BackButton } from './components/BackButton'
-import { ButtonGroup } from './components/ButtonGroup'
-import { Field } from './components/Field'
-import { FieldErrorMessage } from './components/FieldErrorMessage'
-import { FieldInstructions } from './components/FieldInstructions'
-import { FieldLabel } from './components/FieldLabel'
-import { FileUpload } from './components/FileUpload'
-import { Form } from './components/Form'
-import { FormErrorMessage } from './components/FormErrorMessage'
-import { FormFooter } from './components/FormFooter'
-import { FormHeader } from './components/FormHeader'
-import { FormPageProgress } from './components/FormPageProgress'
-import { FormPages } from './components/FormPages'
-import { FormPageTabs } from './components/FormPageTabs'
-import { FormSuccessMessage } from './components/FormSuccessMessage'
-import { FormTitle } from './components/FormTitle'
-import { Input } from './components/Input'
-import { MultiLineText } from './components/MultiLineText'
-import { Page } from './components/Page'
-import { PageFooter } from './components/PageFooter'
-import { PageHeader } from './components/PageHeader'
-import { PageRows } from './components/PageRows'
-import { PageTab } from './components/PageTab'
-import { PageTitle } from './components/PageTitle'
-import { Row } from './components/Row'
-import { SubmitButton } from './components/SubmitButton'
-import { BUTTON_POSITION, FIELD_POSITION, FIELD_TYPE } from './types'
-import { shouldShowConditionalField, shouldShowConditionalPage } from './utils/conditional'
+import { useFormik } from "formik";
+import findLastIndex from "lodash/findLastIndex";
+import findIndex from "lodash/findIndex";
+import merge from "lodash/merge";
+import noop from "lodash/noop";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { BackButton } from "./components/BackButton";
+import { ButtonGroup } from "./components/ButtonGroup";
+import { Field } from "./components/Field";
+import { FieldErrorMessage } from "./components/FieldErrorMessage";
+import { FieldInstructions } from "./components/FieldInstructions";
+import { FieldLabel } from "./components/FieldLabel";
+import { FileUpload } from "./components/FileUpload";
+import { Form } from "./components/Form";
+import { FormErrorMessage } from "./components/FormErrorMessage";
+import { FormFooter } from "./components/FormFooter";
+import { FormHeader } from "./components/FormHeader";
+import { FormPageProgress } from "./components/FormPageProgress";
+import { FormPages } from "./components/FormPages";
+import { FormPageTabs } from "./components/FormPageTabs";
+import { FormSuccessMessage } from "./components/FormSuccessMessage";
+import { FormTitle } from "./components/FormTitle";
+import { Input } from "./components/Input";
+import { MultiLineText } from "./components/MultiLineText";
+import { Page } from "./components/Page";
+import { PageFooter } from "./components/PageFooter";
+import { PageHeader } from "./components/PageHeader";
+import { PageRows } from "./components/PageRows";
+import { PageTab } from "./components/PageTab";
+import { PageTitle } from "./components/PageTitle";
+import { Row } from "./components/Row";
+import { SubmitButton } from "./components/SubmitButton";
+import { BUTTON_POSITION, FIELD_POSITION, FIELD_TYPE } from "./types";
+import {
+  shouldShowConditionalField,
+  shouldShowConditionalPage,
+} from "./utils/conditional";
 import {
   defaultModifyClassName,
   defaultModifyId,
@@ -42,8 +46,8 @@ import {
   parseRawForm,
   requiredPropError,
   validationSchemaProp,
-} from './utils/helpers'
-import { getPageValidationSchema } from './utils/validation'
+} from "./utils/helpers";
+import { getPageValidationSchema } from "./utils/validation";
 
 export const defaultComponents = {
   [FIELD_TYPE.EMAIL]: (props) => <Input type={"email"} {...props} />,
@@ -124,6 +128,7 @@ export function useFormieForm({
 
   const [formErrorMessage, setFormErrorMessage] = useState();
   const [formSuccessMessage, setFormSuccessMessage] = useState();
+  const [isGoingBack, setIsGoingBack] = useState(false);
   const [pageIndex, setPageIndex] = useState(initialPageIndex);
   const [submissionId, setSubmissionId] = useState(initialSubmissionId);
 
@@ -198,6 +203,10 @@ export function useFormieForm({
     setSubmissionId,
   };
 
+  function handleBack() {
+    setIsGoingBack(true);
+  }
+
   function handleReset(fields, actions) {
     setFormErrorMessage(undefined);
     setFormSuccessMessage(undefined);
@@ -214,8 +223,12 @@ export function useFormieForm({
     setFormSuccessMessage(undefined);
     setFormErrorMessage(undefined);
 
+    const firstInvalidPageIndex = pages.findIndex(filterInvalid);
+    const isLastPage = pageIndex === pages.length - 1;
+    const goingBack = isGoingBack && isLastPage; // Don’t validate last page if going back
+
     return onSubmit(
-      { ...imperativeValues, fields },
+      { ...imperativeValues, goingBack, fields },
       { ...imperativeMethods, ...actions }
     )
       .then((response) => response.json())
@@ -229,7 +242,17 @@ export function useFormieForm({
           return Promise.reject(data.errorMessage ?? data.error);
         }
 
-        if (pageIndex === pages.length - 1) {
+        if (isGoingBack) {
+          // Go to the previous page
+          const prevShownPageIndex = findLastIndex(
+            pages,
+            filterShouldShow,
+            pageIndex - 1
+          );
+
+          setPageIndex(prevShownPageIndex);
+          setIsGoingBack(false);
+        } else if (isLastPage) {
           // Reset the form
           actions.resetForm();
           setFormErrorMessage(undefined);
@@ -243,7 +266,6 @@ export function useFormieForm({
           }
         } else {
           // Go to the next page
-          const firstInvalidPageIndex = pages.findIndex(filterInvalid);
           const nextShownPageIndex = findIndex(
             pages,
             filterShouldShow,
@@ -282,11 +304,14 @@ export function useFormieForm({
     formErrorMessageRef,
     formSuccessMessage,
     formSuccessMessageRef,
+    isGoingBack,
+    handleBack,
     options,
     page,
     pageIndex,
     setFormErrorMessage,
     setFormSuccessMessage,
+    setIsGoingBack,
     setPageIndex,
     setSubmissionId,
     submissionId,

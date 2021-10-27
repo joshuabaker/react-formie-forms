@@ -11,6 +11,8 @@ export const FormieForm = forwardRef((props, ref) => {
     formErrorMessageRef,
     formSuccessMessage,
     formSuccessMessageRef,
+    handleBack,
+    isSubmitting,
     page,
     pageIndex,
   } = useFormieContext();
@@ -67,11 +69,20 @@ export const FormieForm = forwardRef((props, ref) => {
             <components.PageFooter>
               <components.ButtonGroup>
                 {pageIndex > 0 && page.settings.showBackButton && (
-                  <components.BackButton>
+                  <components.BackButton
+                    as={"button"}
+                    type={"submit"}
+                    onClick={handleBack}
+                    disabled={isSubmitting}
+                  >
                     {page.settings.backButtonLabel}
                   </components.BackButton>
                 )}
-                <components.SubmitButton>
+                <components.SubmitButton
+                  as={"button"}
+                  type={"submit"}
+                  disabled={isSubmitting}
+                >
                   {page.settings.submitButtonLabel}
                 </components.SubmitButton>
               </components.ButtonGroup>
