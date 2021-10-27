@@ -8,7 +8,9 @@ export const FormieForm = forwardRef((props, ref) => {
     components,
     form,
     formErrorMessage,
+    formErrorMessageRef,
     formSuccessMessage,
+    formSuccessMessageRef,
     page,
     pageIndex,
   } = useFormieContext();
@@ -29,16 +31,22 @@ export const FormieForm = forwardRef((props, ref) => {
             {pageIndex + 1} of {form.pages.length}
           </components.FormPageProgress>
         )}
-        {formErrorMessage &&
-          form.settings.errorMessagePosition !== FORM_POSITION.BELOW_FORM && (
-            <components.FormErrorMessage>
+        {form.settings.errorMessagePosition !== FORM_POSITION.BELOW_FORM &&
+          formErrorMessage && (
+            <components.FormErrorMessage
+              ref={formErrorMessageRef}
+              tabIndex={-1}
+            >
               {formErrorMessage}
             </components.FormErrorMessage>
           )}
-        {formSuccessMessage &&
-          form.settings.submitActionMessagePosition !==
-            FORM_POSITION.BELOW_FORM && (
-            <components.FormSuccessMessage>
+        {form.settings.submitActionMessagePosition !==
+          FORM_POSITION.BELOW_FORM &&
+          formSuccessMessage && (
+            <components.FormSuccessMessage
+              ref={formSuccessMessageRef}
+              tabIndex={-1}
+            >
               {formSuccessMessage}
             </components.FormSuccessMessage>
           )}
@@ -72,16 +80,22 @@ export const FormieForm = forwardRef((props, ref) => {
         </PageProvider>
       </components.FormPages>
       <components.FormFooter>
-        {formSuccessMessage &&
-          form.settings.submitActionMessagePosition ===
-            FORM_POSITION.BELOW_FORM && (
-            <components.FormSuccessMessage>
+        {form.settings.submitActionMessagePosition ===
+          FORM_POSITION.BELOW_FORM &&
+          formSuccessMessage && (
+            <components.FormSuccessMessage
+              ref={formSuccessMessageRef}
+              tabIndex={-1}
+            >
               {formSuccessMessage}
             </components.FormSuccessMessage>
           )}
-        {formErrorMessage &&
-          form.settings.errorMessagePosition === FORM_POSITION.BELOW_FORM && (
-            <components.FormErrorMessage>
+        {form.settings.errorMessagePosition === FORM_POSITION.BELOW_FORM &&
+          formErrorMessage && (
+            <components.FormErrorMessage
+              ref={formErrorMessageRef}
+              tabIndex={-1}
+            >
               {formErrorMessage}
             </components.FormErrorMessage>
           )}

@@ -1,6 +1,6 @@
 {
   "name": "react-formie-forms",
-  "version": "1.0.0-alpha.43",
+  "version": "1.0.0-alpha.50",
   "description": "Renders Craft CMS Formie forms in React apps.",
   "source": "src/index.js",
   "main": "dist/cjs/index.js",

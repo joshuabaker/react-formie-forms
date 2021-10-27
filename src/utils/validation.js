@@ -26,30 +26,48 @@ export function getPageValidationSchema(page) {
 }
 
 export function getFieldValidationSchema(field) {
-  const { type, required, limit, limitType, limitAmount, name } = field;
-
-  let validation;
+  const { type } = field;
 
   switch (type) {
     case FIELD_TYPE.CHECKBOXES:
     case FIELD_TYPE.FILE_UPLOAD:
-      validation = Yup.array();
-      if (required) {
-        validation = validation.min(1);
-      }
-      break;
+      return getArrayFieldValidationSchema(field);
 
     case FIELD_TYPE.EMAIL:
-      validation = Yup.string().email();
-      break;
+      return getStringFieldValidationSchema(field).email();
 
     default:
-      validation = Yup.string();
-      break;
+      return getStringFieldValidationSchema(field);
   }
+}
+
+export function getArrayFieldValidationSchema(field) {
+  const { errorMessage, name, required } = field;
+
+  let validation = Yup.array().label(name);
 
   if (required) {
-    validation = validation.required();
+    if (errorMessage) {
+      validation = validation.required(errorMessage).min(1, errorMessage);
+    } else {
+      validation = validation.required().min(1);
+    }
+  }
+
+  return validation;
+}
+
+export function getStringFieldValidationSchema(field) {
+  const { errorMessage, limit, limitAmount, limitType, name, required } = field;
+
+  let validation = Yup.string().label(name);
+
+  if (required) {
+    if (errorMessage) {
+      validation = validation.required(errorMessage);
+    } else {
+      validation = validation.required();
+    }
   }
 
   if (limit) {
@@ -78,5 +96,5 @@ export function getFieldValidationSchema(field) {
     }
   }
 
-  return validation.label(name);
+  return validation;
 }
