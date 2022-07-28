@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "react-formie-forms": {
+      "signature": "df16ad60de1786e5d5aaab1fafc4af16",
+      "file": true
+    }
+  }
+}

@@ -1,13 +1,12 @@
 {
   "name": "react-formie-forms",
-  "version": "1.0.0-alpha.61",
+  "version": "1.0.0-alpha.60",
   "description": "Renders Craft CMS Formie forms in React apps.",
   "type": "module",
   "jsnext:main": "src/index.js",
   "main": "src/index.js",
   "module": "src/index.js",
   "scripts": {
-    "prettier": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,15 +21,13 @@
     "nextjs",
     "react"
   ],
-  "author": "https://github.com/joshuabaker",
+  "author": "ttps://github.com/joshuabaker",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/joshuabaker/react-formie-forms/issues"
   },
   "homepage": "https://github.com/joshuabaker/react-formie-forms#readme",
-  "peerDependencies": {
-    "react": "^16.0.0 || ^17.0.0"
-  },
+  "peerDependencies": {},
   "dependencies": {
     "classnames": "^2.2.6",
     "formik": "^2.2.6",
@@ -38,20 +35,9 @@
     "lodash": "^4.17.20",
     "object-to-formdata": "^4.1.0",
     "react-dropzone": "^11.2.4",
+    "react-formie-forms": "file:.yalc/react-formie-forms",
     "react-textarea-autosize": "^8.3.0",
     "yup": "^0.32.8"
   },
-  "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "@rollup/plugin-babel": "^5.2.2",
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.1.0",
-    "prettier": "^2.7.1",
-    "rollup": "^2.35.1",
-    "rollup-plugin-delete": "^2.0.0"
-  }
+  "yalcSig": "df16ad60de1786e5d5aaab1fafc4af16"
 }
