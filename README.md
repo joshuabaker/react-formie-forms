@@ -1,3 +1,9 @@
+> [!IMPORTANT]
+>
+> **This repository is no longer maintained.**
+>
+> [@verbb](https://github.com/verbb) has provided demo of a GraphQL headless implementation: [verbb/formie-headless](https://github.com/verbb/formie-headless)
+
 <h1>
   React Formie Forms
   <img src="https://raw.githubusercontent.com/verbb/formie/craft-3/src/icon.svg" alt="Logo" width="40" align="right" />
